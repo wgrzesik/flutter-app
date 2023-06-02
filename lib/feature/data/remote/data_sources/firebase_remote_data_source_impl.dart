@@ -3,6 +3,8 @@ import 'package:note_app/feature/data/remote/models/note_model.dart';
 import 'package:note_app/feature/data/remote/models/user_model.dart';
 import 'package:note_app/feature/domain/entities/user_entity.dart';
 import 'package:note_app/feature/domain/entities/note_entity.dart';
+import '../../../domain/entities/set_entity.dart';
+import 'package:note_app/feature/data/remote/models/set_model.dart';
 import 'firebase_remote_data_source.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
@@ -70,18 +72,6 @@ class FirebaseRemoteDataSourceImpl implements FirebaseRemoteDataSource {
   Future<String> getCurrentUid() async => auth.currentUser!.uid;
 
   @override
-  Stream<List<NoteEntity>> getNotes(String uid) {
-    final noteCollectionRef =
-        firestore.collection("users").doc(uid).collection("notes");
-
-    return noteCollectionRef.snapshots().map((querySnap) {
-      return querySnap.docs
-          .map((docSnap) => NoteModel.fromSnapshot(docSnap))
-          .toList();
-    });
-  }
-
-  @override
   Future<bool> isSignIn() async => auth.currentUser?.uid != null;
 
   @override
@@ -106,5 +96,29 @@ class FirebaseRemoteDataSourceImpl implements FirebaseRemoteDataSource {
     if (note.time != null) noteMap['time'] = note.time;
 
     noteCollectionRef.doc(note.noteId).update(noteMap);
+  }
+
+  @override
+  Stream<List<NoteEntity>> getNotes(String uid) {
+    final noteCollectionRef =
+        firestore.collection("users").doc(uid).collection("notes");
+
+    return noteCollectionRef.snapshots().map((querySnap) {
+      return querySnap.docs
+          .map((docSnap) => NoteModel.fromSnapshot(docSnap))
+          .toList();
+    });
+  }
+
+  @override
+  Stream<List<SetEntity>> getSets(String uid) {
+    final setCollectionRef =
+        firestore.collection("sets").doc(uid).collection("flashcards");
+
+    return setCollectionRef.snapshots().map((querySnap) {
+      return querySnap.docs
+          .map((docSnap) => SetModel.fromSnapshot(docSnap))
+          .toList();
+    });
   }
 }

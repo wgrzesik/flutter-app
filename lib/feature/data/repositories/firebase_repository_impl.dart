@@ -1,12 +1,14 @@
 import 'package:note_app/feature/domain/entities/user_entity.dart';
 import 'package:note_app/feature/domain/entities/note_entity.dart';
 import 'package:note_app/feature/domain/repositories/firebase_repository.dart';
+import '../../domain/entities/set_entity.dart';
 import '../remote/data_sources/firebase_remote_data_source.dart';
 
 class FirebaseRepositoryImpl extends FirebaseRepository {
   final FirebaseRemoteDataSource remoteDataSource;
 
   FirebaseRepositoryImpl({required this.remoteDataSource});
+
   @override
   Future<void> addNewNote(NoteEntity note) async =>
       remoteDataSource.addNewNote(note);
@@ -23,10 +25,6 @@ class FirebaseRepositoryImpl extends FirebaseRepository {
   Future<String> getCurrentUId() async => remoteDataSource.getCurrentUid();
 
   @override
-  Stream<List<NoteEntity>> getNotes(String uid) =>
-      remoteDataSource.getNotes(uid);
-
-  @override
   Future<bool> isSignIn() async => remoteDataSource.isSignIn();
 
   @override
@@ -41,4 +39,11 @@ class FirebaseRepositoryImpl extends FirebaseRepository {
   @override
   Future<void> updateNote(NoteEntity note) async =>
       remoteDataSource.updateNote(note);
+
+  @override
+  Stream<List<NoteEntity>> getNotes(String uid) =>
+      remoteDataSource.getNotes(uid);
+
+  @override
+  Stream<List<SetEntity>> getSets(String uid) => remoteDataSource.getSets(uid);
 }

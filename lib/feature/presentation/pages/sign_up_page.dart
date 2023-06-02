@@ -8,6 +8,7 @@ import '../../../app_const.dart';
 import '../../domain/entities/user_entity.dart';
 import '../cubit/auth/auth_cubit.dart';
 import '../cubit/user/user_cubit.dart';
+import 'flashcard_home_page.dart';
 import 'home_page.dart';
 
 class SignUpPage extends StatefulWidget {
@@ -42,9 +43,10 @@ class _SignUpPageState extends State<SignUpPage> {
               return BlocBuilder<AuthCubit, AuthState>(
                   builder: (context, authState) {
                 if (authState is Authenticated) {
-                  return HomePage(
-                    uid: authState.uid,
-                  );
+                  // return HomePage(
+                  //   uid: authState.uid,
+                  // );
+                  return FlashcardHomePage(uid: authState.uid);
                 } else {
                   return _bodyWidget();
                 }

@@ -1,0 +1,14 @@
+{
+    "nature": [
+        {
+            "id": 1,
+            "term": "tree",
+            "definition": "drzewo"
+        },
+        {
+            "id": 2,
+            "term": "flower",
+            "definition": "kwiat"
+        }
+    ]
+}

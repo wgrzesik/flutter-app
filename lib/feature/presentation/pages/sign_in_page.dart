@@ -3,6 +3,7 @@ import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter/src/widgets/placeholder.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_icons/flutter_icons.dart';
+import 'package:note_app/feature/presentation/pages/flashcard_home_page.dart';
 
 import '../../../app_const.dart';
 import '../../domain/entities/user_entity.dart';
@@ -42,9 +43,10 @@ class _SignInPageState extends State<SignInPage> {
               return BlocBuilder<AuthCubit, AuthState>(
                   builder: (context, authState) {
                 if (authState is Authenticated) {
-                  return HomePage(
-                    uid: authState.uid,
-                  );
+                  // return HomePage(
+                  //   uid: authState.uid,
+                  // );
+                  return FlashcardHomePage(uid: authState.uid);
                 } else {
                   return _bodyWidget();
                 }
