@@ -5,4 +5,6 @@ class PageConst {
   static const String signInPage = "signInPage";
   static const String addNotePage = "addNotePage";
   static const String updateNotePage = "updateNotePage";
+
+  static const String flashcardsPage = "FlashcardsPage";
 }

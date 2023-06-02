@@ -1,6 +1,7 @@
 import 'package:note_app/feature/domain/entities/user_entity.dart';
 import 'package:note_app/feature/domain/entities/note_entity.dart';
 import 'package:note_app/feature/domain/repositories/firebase_repository.dart';
+import '../../domain/entities/flashcard_entity.dart';
 import '../../domain/entities/set_entity.dart';
 import '../remote/data_sources/firebase_remote_data_source.dart';
 
@@ -45,5 +46,9 @@ class FirebaseRepositoryImpl extends FirebaseRepository {
       remoteDataSource.getNotes(uid);
 
   @override
-  Stream<List<SetEntity>> getSets(String uid) => remoteDataSource.getSets(uid);
+  Stream<List<SetEntity>> getSets() => remoteDataSource.getSets();
+
+  @override
+  Stream<List<FlashcardEntity>> getFlashcards(String uid) =>
+      remoteDataSource.getFlashcards(uid);
 }

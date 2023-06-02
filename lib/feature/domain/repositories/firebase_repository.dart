@@ -1,3 +1,4 @@
+import '../entities/flashcard_entity.dart';
 import '../entities/note_entity.dart';
 import '../entities/set_entity.dart';
 import '../entities/user_entity.dart';
@@ -15,5 +16,6 @@ abstract class FirebaseRepository {
   Future<void> deleteNote(NoteEntity note);
   Stream<List<NoteEntity>> getNotes(String uid);
 
-  Stream<List<SetEntity>> getSets(String uid);
+  Stream<List<SetEntity>> getSets();
+  Stream<List<FlashcardEntity>> getFlashcards(String uid);
 }

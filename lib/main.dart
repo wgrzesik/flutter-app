@@ -32,7 +32,8 @@ class MainApp extends StatelessWidget {
             create: (_) => di.sl<AuthCubit>()..appStarted()),
         BlocProvider<UserCubit>(create: (_) => di.sl<UserCubit>()),
         BlocProvider<NoteCubit>(create: (_) => di.sl<NoteCubit>()),
-        BlocProvider<SetCubit>(create: (_) => di.sl<SetCubit>())
+        BlocProvider<SetCubit>(create: (_) => di.sl<SetCubit>()),
+        BlocProvider<FlashcardCubit>(create: (_) => di.sl<FlashcardCubit>())
       ],
       child: MaterialApp(
           title: 'My App',
@@ -46,7 +47,7 @@ class MainApp extends StatelessWidget {
                   builder: (context, authState) {
                 if (authState is Authenticated) {
                   //return FlashcardHomePage(uid: authState.uid);
-                  return FlashcardHomePage(uid: 'nature');
+                  return const FlashcardHomePage(uid: 'nature');
                 }
                 if (authState is UnAuthenticated) {
                   return SignInPage();

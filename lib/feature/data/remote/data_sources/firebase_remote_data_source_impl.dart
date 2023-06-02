@@ -3,6 +3,8 @@ import 'package:note_app/feature/data/remote/models/note_model.dart';
 import 'package:note_app/feature/data/remote/models/user_model.dart';
 import 'package:note_app/feature/domain/entities/user_entity.dart';
 import 'package:note_app/feature/domain/entities/note_entity.dart';
+import '../../../domain/entities/flashcard_entity.dart';
+import 'package:note_app/feature/data/remote/models/flashcard_model.dart';
 import '../../../domain/entities/set_entity.dart';
 import 'package:note_app/feature/data/remote/models/set_model.dart';
 import 'firebase_remote_data_source.dart';
@@ -111,13 +113,24 @@ class FirebaseRemoteDataSourceImpl implements FirebaseRemoteDataSource {
   }
 
   @override
-  Stream<List<SetEntity>> getSets(String uid) {
-    final setCollectionRef =
-        firestore.collection("sets").doc(uid).collection("flashcards");
+  Stream<List<SetEntity>> getSets() {
+    final setCollectionRef = firestore.collection("sets");
 
     return setCollectionRef.snapshots().map((querySnap) {
       return querySnap.docs
           .map((docSnap) => SetModel.fromSnapshot(docSnap))
+          .toList();
+    });
+  }
+
+  @override
+  Stream<List<FlashcardEntity>> getFlashcards(String uid) {
+    final flashcardCollectionRef =
+        firestore.collection("sets").doc(uid).collection("flashcards");
+
+    return flashcardCollectionRef.snapshots().map((querySnap) {
+      return querySnap.docs
+          .map((docSnap) => FlashcardModel.fromSnapshot(docSnap))
           .toList();
     });
   }

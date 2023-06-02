@@ -6,7 +6,7 @@ class GetSetsUseCase {
 
   GetSetsUseCase({required this.repository});
 
-  Stream<List<SetEntity>> call(String uid) {
-    return repository.getSets(uid);
+  Stream<List<SetEntity>> call() {
+    return repository.getSets();
   }
 }

@@ -2,13 +2,11 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:equatable/equatable.dart';
 
 class SetEntity extends Equatable {
-  final int? nr;
-  final String? term;
-  final String? definition;
+  final String? name;
 
-  SetEntity({this.nr, this.term, this.definition});
+  SetEntity({this.name});
 
   @override
   // TODO: implement props
-  List<Object?> get props => [nr, term, definition];
+  List<Object?> get props => [name];
 }

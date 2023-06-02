@@ -14,16 +14,16 @@ import '../../../domain/use_cases/get_sets_usecase.dart';
 part 'set_state.dart';
 
 class SetCubit extends Cubit<SetState> {
-  final GetSetsUseCase getNotesUseCase;
+  final GetSetsUseCase getSetsUseCase;
 
   SetCubit({
-    required this.getNotesUseCase,
+    required this.getSetsUseCase,
   }) : super(SetInitial());
 
-  Future<void> getSet({required String uid}) async {
+  Future<void> getSet() async {
     emit(SetLoading());
     try {
-      getNotesUseCase.call(uid).listen((notes) {
+      getSetsUseCase.call().listen((notes) {
         emit(SetLoaded(sets: notes));
       });
     } on SocketException catch (_) {

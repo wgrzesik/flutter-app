@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:note_app/app_const.dart';
 import 'package:flutter/cupertino.dart';
-
 import 'feature/domain/entities/note_entity.dart';
 import 'feature/presentation/pages/add_new_note_page.dart';
+import 'feature/presentation/pages/flashcards_page.dart';
 import 'feature/presentation/pages/sign_in_page.dart';
 import 'feature/presentation/pages/sign_up_page.dart';
 import 'feature/presentation/pages/update_note_page.dart';
@@ -44,6 +44,20 @@ class OnGenerateRoute {
             return materialBuilder(
                 widget: UpdateNotePage(
               noteEntity: args,
+            ));
+          } else {
+            return materialBuilder(
+              widget: ErrorPage(),
+            );
+          }
+          break;
+        }
+      case PageConst.flashcardsPage:
+        {
+          if (args is String) {
+            return materialBuilder(
+                widget: FlashcardsPage(
+              name: args,
             ));
           } else {
             return materialBuilder(

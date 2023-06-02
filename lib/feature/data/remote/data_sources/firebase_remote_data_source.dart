@@ -1,6 +1,7 @@
 import '../../../domain/entities/note_entity.dart';
 import '../../../domain/entities/set_entity.dart';
 import '../../../domain/entities/user_entity.dart';
+import '../../../domain/entities/flashcard_entity.dart';
 
 abstract class FirebaseRemoteDataSource {
   Future<bool> isSignIn();
@@ -15,5 +16,6 @@ abstract class FirebaseRemoteDataSource {
   Future<void> deleteNote(NoteEntity note);
   Stream<List<NoteEntity>> getNotes(String uid);
 
-  Stream<List<SetEntity>> getSets(String uid);
+  Stream<List<SetEntity>> getSets();
+  Stream<List<FlashcardEntity>> getFlashcards(String uid);
 }

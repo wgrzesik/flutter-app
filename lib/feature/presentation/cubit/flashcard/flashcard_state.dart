@@ -1,28 +1,28 @@
-// part of 'flashcard_cubit.dart';
+part of 'flashcard_cubit.dart';
 
-// abstract class FlashcardState extends Equatable {
-//   const FlashcardState();
-// }
+abstract class FlashcardState extends Equatable {
+  const FlashcardState();
+}
 
-// class FlashcardInitial extends FlashcardState {
-//   @override
-//   List<Object> get props => [];
-// }
+class FlashcardInitial extends FlashcardState {
+  @override
+  List<Object> get props => [];
+}
 
-// class FlashcardLoading extends FlashcardState {
-//   @override
-//   List<Object> get props => [];
-// }
+class FlashcardLoading extends FlashcardState {
+  @override
+  List<Object> get props => [];
+}
 
-// class FlashcardFailure extends FlashcardState {
-//   @override
-//   List<Object> get props => [];
-// }
+class FlashcardFailure extends FlashcardState {
+  @override
+  List<Object> get props => [];
+}
 
-// class FlashcardLoaded extends FlashcardState {
-//   final List<FlashcardEntity> flashcards;
+class FlashcardLoaded extends FlashcardState {
+  final List<FlashcardEntity> flashcards;
 
-//   const FlashcardLoaded({required this.flashcards});
-//   @override
-//   List<Object> get props => [];
-// }
+  const FlashcardLoaded({required this.flashcards});
+  @override
+  List<Object> get props => [flashcards];
+}

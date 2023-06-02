@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:equatable/equatable.dart';
 
 class FlashcardEntity extends Equatable {
@@ -9,5 +10,5 @@ class FlashcardEntity extends Equatable {
 
   @override
   // TODO: implement props
-  List<Object?> get props => throw UnimplementedError();
+  List<Object?> get props => [nr, term, definition];
 }
