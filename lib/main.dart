@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:note_app/feature/presentation/cubit/auth/auth_cubit.dart';
 import 'package:note_app/feature/presentation/cubit/note/note_cubit.dart';
+import 'package:note_app/feature/presentation/cubit/stats/stats_cubit.dart';
 import 'package:note_app/on_generate_route.dart';
 import 'feature/presentation/cubit/flashcard/flashcard_cubit.dart';
 import 'feature/presentation/cubit/set/set_cubit.dart';
@@ -33,7 +34,8 @@ class MainApp extends StatelessWidget {
         BlocProvider<UserCubit>(create: (_) => di.sl<UserCubit>()),
         BlocProvider<NoteCubit>(create: (_) => di.sl<NoteCubit>()),
         BlocProvider<SetCubit>(create: (_) => di.sl<SetCubit>()),
-        BlocProvider<FlashcardCubit>(create: (_) => di.sl<FlashcardCubit>())
+        BlocProvider<FlashcardCubit>(create: (_) => di.sl<FlashcardCubit>()),
+        BlocProvider<StatsCubit>(create: (_) => di.sl<StatsCubit>()),
       ],
       child: MaterialApp(
           title: 'My App',
@@ -47,7 +49,7 @@ class MainApp extends StatelessWidget {
                   builder: (context, authState) {
                 if (authState is Authenticated) {
                   //return FlashcardHomePage(uid: authState.uid);
-                  return const FlashcardHomePage(uid: 'nature');
+                  return FlashcardHomePage(uid: authState.uid);
                 }
                 if (authState is UnAuthenticated) {
                   return SignInPage();

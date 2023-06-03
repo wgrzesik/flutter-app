@@ -6,11 +6,8 @@ class FlashcardModel extends FlashcardEntity {
     final int? nr,
     final String? term,
     final String? definiton,
-  }) : super(
-          nr: nr,
-          term: term,
-          definition: definiton,
-        );
+    final String? set,
+  }) : super(nr: nr, term: term, definition: definiton);
 
   factory FlashcardModel.fromSnapshot(DocumentSnapshot documentSnapshot) {
     return FlashcardModel(

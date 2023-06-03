@@ -1,6 +1,7 @@
 import '../entities/flashcard_entity.dart';
 import '../entities/note_entity.dart';
 import '../entities/set_entity.dart';
+import '../entities/stats_entity.dart';
 import '../entities/user_entity.dart';
 
 abstract class FirebaseRepository {
@@ -18,4 +19,6 @@ abstract class FirebaseRepository {
 
   Stream<List<SetEntity>> getSets();
   Stream<List<FlashcardEntity>> getFlashcards(String uid);
+  Future<void> addNewStats(StatsEntity stats);
+  Future<void> updateStats(StatsEntity stats);
 }

@@ -1,5 +1,6 @@
 import '../../../domain/entities/note_entity.dart';
 import '../../../domain/entities/set_entity.dart';
+import '../../../domain/entities/stats_entity.dart';
 import '../../../domain/entities/user_entity.dart';
 import '../../../domain/entities/flashcard_entity.dart';
 
@@ -18,4 +19,6 @@ abstract class FirebaseRemoteDataSource {
 
   Stream<List<SetEntity>> getSets();
   Stream<List<FlashcardEntity>> getFlashcards(String uid);
+  Future<void> addNewStats(StatsEntity stats);
+  Future<void> updateStats(StatsEntity stats);
 }

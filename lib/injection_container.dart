@@ -5,8 +5,10 @@ import 'package:note_app/feature/data/remote/data_sources/firebase_remote_data_s
 import 'package:note_app/feature/data/remote/data_sources/firebase_remote_data_source_impl.dart';
 import 'package:note_app/feature/domain/repositories/firebase_repository.dart';
 import 'package:note_app/feature/domain/use_cases/add_new_note_usecase.dart';
+import 'package:note_app/feature/domain/use_cases/add_stats_usecase.dart';
 import 'package:note_app/feature/domain/use_cases/get_sets_usecase.dart';
 import 'package:note_app/feature/presentation/cubit/auth/auth_cubit.dart';
+import 'package:note_app/feature/presentation/cubit/stats/stats_cubit.dart';
 import 'feature/data/repositories/firebase_repository_impl.dart';
 import 'feature/domain/use_cases/delete_note_usecase.dart';
 import 'feature/domain/use_cases/get_create_current_user_usecase.dart';
@@ -18,6 +20,7 @@ import 'feature/domain/use_cases/sign_in_usecase.dart';
 import 'feature/domain/use_cases/sign_out_usecase.dart';
 import 'feature/domain/use_cases/sign_up_usecase.dart';
 import 'feature/domain/use_cases/update_note_usecase.dart';
+import 'feature/domain/use_cases/update_stats_usecase.dart';
 import 'feature/presentation/cubit/flashcard/flashcard_cubit.dart';
 import 'feature/presentation/cubit/note/note_cubit.dart';
 import 'feature/presentation/cubit/set/set_cubit.dart';
@@ -45,6 +48,8 @@ Future<void> init() async {
   sl.registerFactory<SetCubit>(() => SetCubit(getSetsUseCase: sl.call()));
   sl.registerFactory<FlashcardCubit>(
       () => FlashcardCubit(getFlashcardsUseCase: sl.call()));
+  sl.registerFactory<StatsCubit>(() =>
+      StatsCubit(addStatsUseCase: sl.call(), updateStatsUseCase: sl.call()));
 
   //useCases
   sl.registerLazySingleton<AddNewNoteUseCase>(
@@ -71,6 +76,10 @@ Future<void> init() async {
       () => GetSetsUseCase(repository: sl.call()));
   sl.registerLazySingleton<GetFlashcardsUseCase>(
       () => GetFlashcardsUseCase(repository: sl.call()));
+  sl.registerLazySingleton<AddStatsUseCase>(
+      () => AddStatsUseCase(repository: sl.call()));
+  sl.registerLazySingleton<UpdateStatsUseCase>(
+      () => UpdateStatsUseCase(repository: sl.call()));
 
   //repository
   sl.registerLazySingleton<FirebaseRepository>(

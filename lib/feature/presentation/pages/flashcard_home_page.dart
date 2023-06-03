@@ -8,6 +8,7 @@ import 'package:note_app/feature/presentation/cubit/auth/auth_cubit.dart';
 import 'package:flip_card/flip_card.dart';
 
 import '../../../app_const.dart';
+import '../../../on_generate_route.dart';
 import '../cubit/set/set_cubit.dart';
 
 class FlashcardHomePage extends StatefulWidget {
@@ -40,13 +41,6 @@ class _FlashcardHomePageState extends State<FlashcardHomePage> {
               },
               icon: Icon(Icons.exit_to_app)),
         ],
-      ),
-      floatingActionButton: FloatingActionButton(
-        child: Icon(Icons.add),
-        onPressed: () {
-          Navigator.pushNamed(context, PageConst.addNotePage,
-              arguments: widget.uid);
-        },
       ),
       body: BlocBuilder<SetCubit, SetState>(
         builder: (context, flashcardState) {
@@ -87,8 +81,17 @@ class _FlashcardHomePageState extends State<FlashcardHomePage> {
                   itemBuilder: (_, index) {
                     return GestureDetector(
                       onTap: () {
-                        Navigator.pushNamed(context, PageConst.flashcardsPage,
-                            arguments: setLoadedState.sets[index].name);
+                        // Navigator.pushNamed(context, PageConst.flashcardsPage,
+                        //     arguments: setLoadedState.sets[index]);
+                        final arguments = FlashcardsPageArguments(
+                          setLoadedState.sets[index],
+                          widget.uid,
+                        );
+                        Navigator.pushNamed(
+                          context,
+                          PageConst.flashcardsPage,
+                          arguments: arguments,
+                        );
                       },
                       child: Container(
                         decoration: BoxDecoration(

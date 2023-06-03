@@ -1,3 +1,4 @@
+import 'package:note_app/feature/domain/entities/stats_entity.dart';
 import 'package:note_app/feature/domain/entities/user_entity.dart';
 import 'package:note_app/feature/domain/entities/note_entity.dart';
 import 'package:note_app/feature/domain/repositories/firebase_repository.dart';
@@ -51,4 +52,12 @@ class FirebaseRepositoryImpl extends FirebaseRepository {
   @override
   Stream<List<FlashcardEntity>> getFlashcards(String uid) =>
       remoteDataSource.getFlashcards(uid);
+
+  @override
+  Future<void> addNewStats(StatsEntity stats) async =>
+      remoteDataSource.addNewStats(stats);
+
+  @override
+  Future<void> updateStats(StatsEntity stats) async =>
+      remoteDataSource.updateStats(stats);
 }

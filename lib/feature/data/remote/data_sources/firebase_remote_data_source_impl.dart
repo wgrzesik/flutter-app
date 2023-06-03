@@ -1,12 +1,14 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:note_app/feature/data/remote/models/note_model.dart';
 import 'package:note_app/feature/data/remote/models/user_model.dart';
+import 'package:note_app/feature/domain/entities/stats_entity.dart';
 import 'package:note_app/feature/domain/entities/user_entity.dart';
 import 'package:note_app/feature/domain/entities/note_entity.dart';
 import '../../../domain/entities/flashcard_entity.dart';
 import 'package:note_app/feature/data/remote/models/flashcard_model.dart';
 import '../../../domain/entities/set_entity.dart';
 import 'package:note_app/feature/data/remote/models/set_model.dart';
+import '../models/stats_model.dart';
 import 'firebase_remote_data_source.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
@@ -133,5 +135,54 @@ class FirebaseRemoteDataSourceImpl implements FirebaseRemoteDataSource {
           .map((docSnap) => FlashcardModel.fromSnapshot(docSnap))
           .toList();
     });
+  }
+
+  @override
+  Future<void> addNewStats(StatsEntity statsEntity) async {
+    final statsCollectionRef = firestore
+        .collection("users")
+        .doc(statsEntity.uid)
+        .collection("sets")
+        .doc("nature")
+        .collection("stats");
+
+    final statsId = statsCollectionRef.doc().id;
+
+    final querySnapshot = await statsCollectionRef
+        .where("term", isEqualTo: statsEntity.term)
+        .get();
+
+    if (querySnapshot.docs.isEmpty) {
+      // Create new stats if it doesn't exist
+      final newStats = StatsModel(
+        uid: statsEntity.uid,
+        set: statsEntity.set,
+        term: statsEntity.term,
+        amount: 1,
+      ).toDocument();
+      statsCollectionRef.doc(statsId).set(newStats);
+    } else {
+      // Update stats by increasing amount by 1
+      final statsDoc = querySnapshot.docs.first;
+      final currentAmount = statsDoc.data()['amount'] as int;
+      final updatedAmount = currentAmount + 1;
+
+      statsCollectionRef.doc(statsDoc.id).update({'amount': updatedAmount});
+    }
+  }
+
+  @override
+  Future<void> updateStats(StatsEntity stats) async {
+    Map<String, dynamic> statsMap = Map();
+    final noteCollectionRef = firestore
+        .collection("users")
+        .doc(stats.uid)
+        .collection("sets")
+        .doc("nature")
+        .collection("stats");
+
+    if (stats.amount != null) statsMap['note'] = stats.amount;
+
+    noteCollectionRef.doc(stats.statsId).update(statsMap);
   }
 }
