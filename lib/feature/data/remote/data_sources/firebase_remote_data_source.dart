@@ -21,4 +21,5 @@ abstract class FirebaseRemoteDataSource {
   Stream<List<FlashcardEntity>> getFlashcards(String uid);
   Future<void> addNewStats(StatsEntity stats);
   Future<void> updateStats(StatsEntity stats);
+  Stream<List<StatsEntity>> getStats(String uid, String setName);
 }

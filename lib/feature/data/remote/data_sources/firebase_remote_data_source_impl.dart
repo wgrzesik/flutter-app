@@ -185,4 +185,20 @@ class FirebaseRemoteDataSourceImpl implements FirebaseRemoteDataSource {
 
     noteCollectionRef.doc(stats.statsId).update(statsMap);
   }
+
+  @override
+  Stream<List<StatsEntity>> getStats(String uid, String setName) {
+    final statsCollectionRef = firestore
+        .collection("users")
+        .doc(uid)
+        .collection("sets")
+        .doc(setName)
+        .collection("stats");
+
+    return statsCollectionRef.snapshots().map((querySnap) {
+      return querySnap.docs
+          .map((docSnap) => StatsModel.fromSnapshot(docSnap))
+          .toList();
+    });
+  }
 }
