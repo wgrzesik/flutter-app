@@ -11,6 +11,7 @@ import '../../domain/entities/stats_entity.dart';
 import '../cubit/auth/auth_cubit.dart';
 import '../cubit/flashcard/flashcard_cubit.dart';
 import '../cubit/stats/stats_cubit.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class FlashcardsPage extends StatefulWidget {
   final SetEntity setEntity;
@@ -66,89 +67,103 @@ class _FlashcardsPageState extends State<FlashcardsPage> {
     return Column(
       children: [
         Expanded(
-            child: Column(
+          flex: 1,
+          child: Container(),
+        ),
+        Expanded(
+          flex: 4,
+          child: PageView.builder(
+            itemCount: setLoadedState.flashcards.length,
+            controller: _pageController,
+            onPageChanged: (index) {
+              setState(() {
+                currentPage = index;
+              });
+            },
+            itemBuilder: (context, index) {
+              return Card(
+                //color: const Color(0xFF006666),
+                color: Colors.deepPurple,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(8.0),
+                ),
+                margin: const EdgeInsets.only(
+                    left: 32.0, right: 32.0, top: 20.0, bottom: 0.0),
+                child: FlipCard(
+                  direction: FlipDirection.HORIZONTAL,
+                  front: _buildCardSide(
+                      "${setLoadedState.flashcards[index].term}"),
+                  back: _buildCardSide(
+                      "${setLoadedState.flashcards[index].definition}"),
+                ),
+              );
+            },
+          ),
+        ),
+        Expanded(
+          flex: 1,
+          child: Container(),
+        ),
+        SizedBox(height: 20),
+        Row(
           children: [
             Expanded(
-              child: PageView.builder(
-                itemCount: setLoadedState.flashcards.length,
-                controller: _pageController,
-                onPageChanged: (index) {
-                  setState(() {
-                    currentPage = index;
-                  });
-                },
-                itemBuilder: (context, index) {
-                  return Container(
-                    margin: EdgeInsets.all(6),
-                    child: FlipCard(
-                      direction: FlipDirection.HORIZONTAL,
-                      front: _buildCardSide(
-                          "${setLoadedState.flashcards[index].term}"),
-                      back: _buildCardSide(
-                          "${setLoadedState.flashcards[index].definition}"),
-                    ),
-                  );
-                },
-              ),
+              flex: 1,
+              child: Container(),
             ),
-            SizedBox(height: 20),
-            Row(
-              children: [
-                FloatingActionButton(
-                  onPressed: () {
-                    _pageController.nextPage(
-                        duration: Duration(milliseconds: 1000),
-                        curve: Curves.bounceOut);
-                    print(currentPage);
-                    BlocProvider.of<StatsCubit>(context).addStats(
-                        stats: StatsEntity(
-                            set: widget.setEntity.name,
-                            amount: currentPage,
-                            uid: widget.additionalParameter,
-                            term: setLoadedState.flashcards[currentPage].term));
-                  },
-                  child: const Icon(
-                    Icons.arrow_back,
-                    color: Colors.red,
-                  ),
-                ),
-                // SizedBox(width: 20),
-                // FloatingActionButton(
-                //   onPressed: () {
-                //     _pageController.nextPage(
-                //         duration: Duration(milliseconds: 1000),
-                //         curve: Curves.bounceOut);
-                //   },
-                //   child: Icon(Icons.arrow_forward, color: Colors.green),
-                // ),
-              ],
-            )
+            FloatingActionButton(
+              onPressed: () {
+                goToNextFlashcard();
+                BlocProvider.of<StatsCubit>(context).addStats(
+                    stats: StatsEntity(
+                        set: widget.setEntity.name,
+                        amount: currentPage,
+                        uid: widget.additionalParameter,
+                        term: setLoadedState.flashcards[currentPage].term));
+              },
+              child: FaIcon(FontAwesomeIcons.xmark),
+              backgroundColor: Colors.red,
+            ),
+            const SizedBox(width: 20),
+            FloatingActionButton(
+              onPressed: () {
+                goToNextFlashcard();
+              },
+              child: FaIcon(Icons.check),
+              backgroundColor: Colors.green,
+            ),
+            Expanded(
+              flex: 1,
+              child: Container(),
+            ),
           ],
-        )),
+        ),
+        Expanded(
+          flex: 1,
+          child: Container(),
+        )
       ],
     );
+  }
+
+  void goToNextFlashcard() {
+    _pageController.nextPage(
+        duration: Duration(milliseconds: 1000), curve: Curves.easeInOut);
   }
 }
 
 Widget _buildCardSide(String text) {
-  return Card(
-    // elevation: 0.0,
-    color: Color(0xFF006666),
-    shape: RoundedRectangleBorder(
-      borderRadius: BorderRadius.circular(8.0),
-    ),
-    child: Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: <Widget>[
-        Text(
-          text,
-          style: TextStyle(
-            color: Colors.white,
-            fontWeight: FontWeight.bold,
-            fontSize: 16,
-          ),
+  return Column(
+    mainAxisAlignment: MainAxisAlignment.center,
+    children: <Widget>[
+      Text(
+        text,
+        style: const TextStyle(
+          color: Colors.white,
+          fontWeight: FontWeight.bold,
+          fontSize: 24,
         ),
-      ],
-    ),
+      ),
+    ],
   );
 }

@@ -40,7 +40,7 @@ class MainApp extends StatelessWidget {
       child: MaterialApp(
           title: 'My App',
           debugShowCheckedModeBanner: false,
-          theme: ThemeData(primarySwatch: Colors.deepOrange),
+          theme: ThemeData(primarySwatch: Colors.deepPurple),
           initialRoute: '/',
           onGenerateRoute: OnGenerateRoute.route,
           routes: {
