@@ -4,6 +4,7 @@ import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:note_app/feature/domain/entities/stats_entity.dart';
 import 'package:note_app/feature/domain/use_cases/get_stats_usecase.dart';
+import '../../../domain/entities/user_entity.dart';
 import '../../../domain/use_cases/add_stats_usecase.dart';
 import '../../../domain/use_cases/update_stats_usecase.dart';
 
@@ -20,7 +21,7 @@ class StatsCubit extends Cubit<StatsState> {
     required this.getStatsUseCase,
   }) : super(StatsInitial());
 
-  Future<void> addStats({required StatsEntity stats}) async {
+  Future<void> addStats({required String stats}) async {
     try {
       await addStatsUseCase.call(stats);
     } on SocketException catch (_) {

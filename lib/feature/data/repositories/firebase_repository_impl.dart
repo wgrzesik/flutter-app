@@ -54,8 +54,8 @@ class FirebaseRepositoryImpl extends FirebaseRepository {
       remoteDataSource.getFlashcards(uid);
 
   @override
-  Future<void> addNewStats(StatsEntity stats) async =>
-      remoteDataSource.addNewStats(stats);
+  Future<void> initializeStats(String uid) async =>
+      remoteDataSource.initializeStats(uid);
 
   @override
   Future<void> updateStats(StatsEntity stats) async =>

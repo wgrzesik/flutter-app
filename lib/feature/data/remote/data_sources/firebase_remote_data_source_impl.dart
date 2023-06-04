@@ -137,37 +137,49 @@ class FirebaseRemoteDataSourceImpl implements FirebaseRemoteDataSource {
   }
 
   @override
-  Future<void> addNewStats(StatsEntity statsEntity) async {
-    final statsCollectionRef = firestore
-        .collection("users")
-        .doc(statsEntity.uid)
-        .collection("sets")
-        .doc("nature")
-        .collection("stats");
+  Future<void> initializeStats(String uid) async {
+    final setCollectionRef = firestore.collection("sets");
 
-    final statsId = statsCollectionRef.doc().id;
+    final setsStream = setCollectionRef.snapshots().map((querySnap) {
+      return querySnap.docs
+          .map((docSnap) => SetModel.fromSnapshot(docSnap))
+          .toList();
+    });
 
-    final querySnapshot = await statsCollectionRef
-        .where("term", isEqualTo: statsEntity.term)
-        .get();
+    setsStream.listen((List<SetEntity> sets) {
+      for (SetEntity set in sets) {
+        final flashcardCollectionRef =
+            firestore.collection("sets").doc(set.name).collection("flashcards");
 
-    if (querySnapshot.docs.isEmpty) {
-      // Create new stats if it doesn't exist
-      final newStats = StatsModel(
-        uid: statsEntity.uid,
-        set: statsEntity.set,
-        term: statsEntity.term,
-        amount: 0,
-      ).toDocument();
-      statsCollectionRef.doc(statsId).set(newStats);
-    } else {
-      // Update stats by increasing amount by 1
-      final statsDoc = querySnapshot.docs.first;
-      final currentAmount = statsDoc.data()['amount'] as int;
-      final updatedAmount = currentAmount + 1;
+        final flashcardStream =
+            flashcardCollectionRef.snapshots().map((querySnap) {
+          return querySnap.docs
+              .map((docSnap) => FlashcardModel.fromSnapshot(docSnap))
+              .toList();
+        });
 
-      statsCollectionRef.doc(statsDoc.id).update({'amount': updatedAmount});
-    }
+        flashcardStream.listen((List<FlashcardEntity> flashcards) {
+          for (FlashcardEntity flashcardEntity in flashcards) {
+            final statsCollectionRef = firestore
+                .collection("users")
+                .doc(uid)
+                .collection("sets")
+                .doc(set.name)
+                .collection("stats");
+
+            final statsId = statsCollectionRef.doc().id;
+
+            final newStats = StatsModel(
+              uid: uid,
+              set: set.name,
+              term: flashcardEntity.term,
+              amount: 0,
+            ).toDocument();
+            statsCollectionRef.doc(statsId).set(newStats);
+          }
+        });
+      }
+    });
   }
 
   @override
@@ -176,7 +188,7 @@ class FirebaseRemoteDataSourceImpl implements FirebaseRemoteDataSource {
         .collection("users")
         .doc(statsEntity.uid)
         .collection("sets")
-        .doc("nature")
+        .doc(statsEntity.set)
         .collection("stats");
 
     final statsId = statsCollectionRef.doc().id;
@@ -202,17 +214,6 @@ class FirebaseRemoteDataSourceImpl implements FirebaseRemoteDataSource {
 
       statsCollectionRef.doc(statsDoc.id).update({'amount': updatedAmount});
     }
-    // Map<String, dynamic> statsMap = Map();
-    // final noteCollectionRef = firestore
-    //     .collection("users")
-    //     .doc(stats.uid)
-    //     .collection("sets")
-    //     .doc("nature")
-    //     .collection("stats");
-
-    // if (stats.amount != null) statsMap['note'] = stats.amount;
-
-    // noteCollectionRef.doc(stats.statsId).update(statsMap);
   }
 
   @override

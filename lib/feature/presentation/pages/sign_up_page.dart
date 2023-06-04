@@ -6,6 +6,7 @@ import 'package:flutter_icons/flutter_icons.dart';
 import 'package:note_app/feature/domain/entities/set_entity.dart';
 
 import '../../../app_const.dart';
+import '../../domain/entities/stats_entity.dart';
 import '../../domain/entities/user_entity.dart';
 import '../cubit/auth/auth_cubit.dart';
 import '../cubit/flashcard/flashcard_cubit.dart';
@@ -47,6 +48,8 @@ class _SignUpPageState extends State<SignUpPage> {
               return BlocBuilder<AuthCubit, AuthState>(
                   builder: (context, authState) {
                 if (authState is Authenticated) {
+                  BlocProvider.of<StatsCubit>(context)
+                      .addStats(stats: authState.uid);
                   return FlashcardHomePage(uid: authState.uid);
                 } else {
                   //_initiateStats();
@@ -193,6 +196,13 @@ class _SignUpPageState extends State<SignUpPage> {
         email: _emailController.text,
         password: _passwordController.text,
       ));
+
+      // UserEntity user = UserEntity(
+      //   name: _usernameController.text,
+      //   email: _emailController.text,
+      //   password: _passwordController.text,
+      // );
+      // BlocProvider.of<StatsCubit>(context).addStats(stats: user);
     }
   }
 }

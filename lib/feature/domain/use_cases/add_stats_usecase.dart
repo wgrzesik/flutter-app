@@ -7,7 +7,7 @@ class AddStatsUseCase {
 
   AddStatsUseCase({required this.repository});
 
-  Future<void> call(StatsEntity stats) async {
-    return repository.addNewStats(stats);
+  Future<void> call(String uid) async {
+    return repository.initializeStats(uid);
   }
 }

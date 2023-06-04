@@ -19,7 +19,7 @@ abstract class FirebaseRepository {
 
   Stream<List<SetEntity>> getSets();
   Stream<List<FlashcardEntity>> getFlashcards(String uid);
-  Future<void> addNewStats(StatsEntity stats);
+  Future<void> initializeStats(String stats);
   Future<void> updateStats(StatsEntity stats);
   Stream<List<StatsEntity>> getStats(String uid, String setName);
 }
