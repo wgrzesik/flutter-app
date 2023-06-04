@@ -49,8 +49,10 @@ Future<void> init() async {
   sl.registerFactory<SetCubit>(() => SetCubit(getSetsUseCase: sl.call()));
   sl.registerFactory<FlashcardCubit>(
       () => FlashcardCubit(getFlashcardsUseCase: sl.call()));
-  sl.registerFactory<StatsCubit>(() =>
-      StatsCubit(addStatsUseCase: sl.call(), updateStatsUseCase: sl.call()));
+  sl.registerFactory<StatsCubit>(() => StatsCubit(
+      addStatsUseCase: sl.call(),
+      updateStatsUseCase: sl.call(),
+      getStatsUseCase: sl.call()));
 
   //useCases
   sl.registerLazySingleton<AddNewNoteUseCase>(

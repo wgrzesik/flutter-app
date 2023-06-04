@@ -6,5 +6,7 @@ class PageConst {
   static const String addNotePage = "addNotePage";
   static const String updateNotePage = "updateNotePage";
 
-  static const String flashcardsPage = "FlashcardsPage";
+  static const String flashcardsPage = "flashcardsPage";
+  static const String statisticsPage = "statisticsPage";
+  static const String flahscardHomePage = "flashcardHomePage";
 }

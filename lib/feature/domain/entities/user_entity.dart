@@ -4,15 +4,9 @@ class UserEntity extends Equatable {
   final String? name;
   final String? email;
   final String? uid;
-  final String? status;
   final String? password;
 
-  UserEntity(
-      {this.name,
-      this.email,
-      this.uid,
-      this.status = "Hello there i'm using this app",
-      this.password});
+  UserEntity({this.name, this.email, this.uid, this.password});
 
   @override
   // TODO: implement props
@@ -20,7 +14,6 @@ class UserEntity extends Equatable {
         name,
         email,
         uid,
-        status,
         password,
       ];
 }

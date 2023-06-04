@@ -6,18 +6,16 @@ class UserModel extends UserEntity {
     final String? name,
     final String? email,
     final String? uid,
-    final String? status,
     final String? password,
   }) : super(
-            uid: uid,
-            name: name,
-            email: email,
-            password: password,
-            status: status);
+          uid: uid,
+          name: name,
+          email: email,
+          password: password,
+        );
 
   factory UserModel.fromSnapshot(DocumentSnapshot documentSnapshot) {
     return UserModel(
-      status: documentSnapshot.get('status'),
       name: documentSnapshot.get('name'),
       uid: documentSnapshot.get('uid'),
       email: documentSnapshot.get('email'),
@@ -25,6 +23,6 @@ class UserModel extends UserEntity {
   }
 
   Map<String, dynamic> toDocument() {
-    return {"status": status, "uid": uid, "email": email, "name": name};
+    return {"uid": uid, "email": email, "name": name};
   }
 }

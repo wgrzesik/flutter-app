@@ -9,7 +9,6 @@ import 'feature/presentation/cubit/user/user_cubit.dart';
 import 'feature/presentation/pages/flashcard_home_page.dart';
 import 'injection_container.dart' as di;
 import 'package:firebase_core/firebase_core.dart';
-// import 'feature/presentation/pages/home_page.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:note_app/feature/presentation/pages/sign_in_page.dart';
 
@@ -48,7 +47,6 @@ class MainApp extends StatelessWidget {
               return BlocBuilder<AuthCubit, AuthState>(
                   builder: (context, authState) {
                 if (authState is Authenticated) {
-                  //return FlashcardHomePage(uid: authState.uid);
                   return FlashcardHomePage(uid: authState.uid);
                 }
                 if (authState is UnAuthenticated) {

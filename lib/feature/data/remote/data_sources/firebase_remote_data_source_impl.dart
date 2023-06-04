@@ -55,12 +55,11 @@ class FirebaseRemoteDataSourceImpl implements FirebaseRemoteDataSource {
 
   @override
   Future<void> getCreateCurrentUser(UserEntity user) async {
-    final userCollectionRef = firestore.collection("notes");
+    final userCollectionRef = firestore.collection("user_data");
     final uid = await getCurrentUid();
     userCollectionRef.doc(user.uid).get().then((value) async {
       final newUser = UserModel(
         uid: uid,
-        status: user.status,
         email: user.email,
         name: user.name,
       ).toDocument();

@@ -26,30 +26,40 @@ class FlashcardsPage extends StatefulWidget {
 
 class _FlashcardsPageState extends State<FlashcardsPage> {
   int currentPage = 0;
-  PageController _pageController = new PageController(initialPage: 0);
+  final PageController _pageController = PageController(initialPage: 0);
 
   @override
   void initState() {
     BlocProvider.of<FlashcardCubit>(context).getSet(uid: widget.setEntity.name);
     super.initState();
-    _pageController.dispose();
-    currentPage = 0;
+    // _pageController.dispose();
+    // _pageController = PageController(initialPage: 0);
+    // currentPage = 0;
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        automaticallyImplyLeading: false,
         title: const Text(
           "My flashcards",
           style: TextStyle(fontSize: 20, fontWeight: FontWeight.w600),
         ),
         actions: [
-          IconButton(
+          FloatingActionButton(
+              heroTag: 'logg_out_from_flashcards',
               onPressed: () {
                 BlocProvider.of<AuthCubit>(context).loggedOut();
               },
-              icon: Icon(Icons.exit_to_app)),
+              child: Icon(Icons.exit_to_app)),
+          FloatingActionButton(
+              heroTag: 'go_back_from_flashcards',
+              onPressed: () {
+                Navigator.pushNamed(context, PageConst.flahscardHomePage,
+                    arguments: widget.additionalParameter);
+              },
+              child: Icon(Icons.arrow_back)),
         ],
       ),
       body: BlocBuilder<FlashcardCubit, FlashcardState>(
@@ -82,7 +92,6 @@ class _FlashcardsPageState extends State<FlashcardsPage> {
             },
             itemBuilder: (context, index) {
               return Card(
-                //color: const Color(0xFF006666),
                 color: Colors.deepPurple,
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(8.0),
@@ -112,6 +121,7 @@ class _FlashcardsPageState extends State<FlashcardsPage> {
               child: Container(),
             ),
             FloatingActionButton(
+              heroTag: 'wrong_answer_button',
               onPressed: () {
                 goToNextFlashcard();
                 BlocProvider.of<StatsCubit>(context).addStats(
@@ -126,6 +136,7 @@ class _FlashcardsPageState extends State<FlashcardsPage> {
             ),
             const SizedBox(width: 20),
             FloatingActionButton(
+              heroTag: 'right_answear_button',
               onPressed: () {
                 goToNextFlashcard();
               },

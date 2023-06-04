@@ -23,3 +23,11 @@ class StatsSuccess extends StatsState {
   @override
   List<Object> get props => [];
 }
+
+class StatsLoaded extends StatsState {
+  final List<StatsEntity> stats;
+
+  const StatsLoaded({required this.stats});
+  @override
+  List<Object> get props => [stats];
+}
