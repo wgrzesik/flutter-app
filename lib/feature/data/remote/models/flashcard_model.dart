@@ -5,19 +5,18 @@ class FlashcardModel extends FlashcardEntity {
   FlashcardModel({
     final int? nr,
     final String? term,
-    final String? definiton,
-    final String? set,
-  }) : super(nr: nr, term: term, definition: definiton);
+    final String? def,
+  }) : super(nr: nr, term: term, def: def);
 
   factory FlashcardModel.fromSnapshot(DocumentSnapshot documentSnapshot) {
     return FlashcardModel(
       nr: documentSnapshot.get('nr'),
       term: documentSnapshot.get('term'),
-      definiton: documentSnapshot.get('definition'),
+      def: documentSnapshot.get('def'),
     );
   }
 
   Map<String, dynamic> toDocument() {
-    return {"nr": nr, "term": term, "definition": definition};
+    return {"nr": nr, "term": term, "def": def};
   }
 }

@@ -12,13 +12,13 @@ import '../cubit/auth/auth_cubit.dart';
 import '../cubit/flashcard/flashcard_cubit.dart';
 import '../cubit/stats/stats_cubit.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:awesome_dialog/awesome_dialog.dart';
 
 class FlashcardsPage extends StatefulWidget {
   final SetEntity setEntity;
-  final String additionalParameter;
+  final String uid;
 
-  const FlashcardsPage(
-      {super.key, required this.setEntity, required this.additionalParameter});
+  const FlashcardsPage({super.key, required this.setEntity, required this.uid});
 
   @override
   State<FlashcardsPage> createState() => _FlashcardsPageState();
@@ -26,11 +26,16 @@ class FlashcardsPage extends StatefulWidget {
 
 class _FlashcardsPageState extends State<FlashcardsPage> {
   int currentPage = 0;
+  int MAX_FLASHCARDS = 20;
+
+  // bool isItFirstTime = true;
+
   final PageController _pageController = PageController(initialPage: 0);
 
   @override
   void initState() {
-    BlocProvider.of<FlashcardCubit>(context).getSet(uid: widget.setEntity.name);
+    BlocProvider.of<FlashcardCubit>(context)
+        .getFlashcard(uid: widget.setEntity.name);
     super.initState();
     // _pageController.dispose();
     // _pageController = PageController(initialPage: 0);
@@ -57,7 +62,7 @@ class _FlashcardsPageState extends State<FlashcardsPage> {
               heroTag: 'go_back_from_flashcards',
               onPressed: () {
                 Navigator.pushNamed(context, PageConst.flahscardHomePage,
-                    arguments: widget.additionalParameter);
+                    arguments: widget.uid);
               },
               child: Icon(Icons.arrow_back)),
         ],
@@ -65,6 +70,9 @@ class _FlashcardsPageState extends State<FlashcardsPage> {
       body: BlocBuilder<FlashcardCubit, FlashcardState>(
         builder: (context, flashcardState) {
           if (flashcardState is FlashcardLoaded) {
+            // if (isItFirstTime) {
+            //   // _initiateStats(flashcardState);
+            // }
             return _bodyWidget(flashcardState);
           }
           return const Center(child: CircularProgressIndicator());
@@ -72,6 +80,19 @@ class _FlashcardsPageState extends State<FlashcardsPage> {
       ),
     );
   }
+
+  // _initiateStats(FlashcardLoaded setLoadedState) {
+  //   isItFirstTime = false;
+  //   for (int i = 0; i < setLoadedState.flashcards.length; i++) {
+  //     //final setEntity = setLoadedState.flashcards[i];
+  //     BlocProvider.of<StatsCubit>(context).addStats(
+  //         stats: StatsEntity(
+  //             set: widget.setEntity.name,
+  //             amount: 0,
+  //             uid: widget.uid,
+  //             term: setLoadedState.flashcards[i].term));
+  //   }
+  // }
 
   Widget _bodyWidget(FlashcardLoaded setLoadedState) {
     return Column(
@@ -102,8 +123,8 @@ class _FlashcardsPageState extends State<FlashcardsPage> {
                   direction: FlipDirection.HORIZONTAL,
                   front: _buildCardSide(
                       "${setLoadedState.flashcards[index].term}"),
-                  back: _buildCardSide(
-                      "${setLoadedState.flashcards[index].definition}"),
+                  back:
+                      _buildCardSide("${setLoadedState.flashcards[index].def}"),
                 ),
               );
             },
@@ -124,11 +145,11 @@ class _FlashcardsPageState extends State<FlashcardsPage> {
               heroTag: 'wrong_answer_button',
               onPressed: () {
                 goToNextFlashcard();
-                BlocProvider.of<StatsCubit>(context).addStats(
+                BlocProvider.of<StatsCubit>(context).updateStats(
                     stats: StatsEntity(
                         set: widget.setEntity.name,
                         amount: currentPage,
-                        uid: widget.additionalParameter,
+                        uid: widget.uid,
                         term: setLoadedState.flashcards[currentPage].term));
               },
               child: FaIcon(FontAwesomeIcons.xmark),
@@ -138,7 +159,21 @@ class _FlashcardsPageState extends State<FlashcardsPage> {
             FloatingActionButton(
               heroTag: 'right_answear_button',
               onPressed: () {
-                goToNextFlashcard();
+                if (currentPage < MAX_FLASHCARDS) {
+                  goToNextFlashcard();
+                } else {
+                  AwesomeDialog(
+                      context: context,
+                      showCloseIcon: false,
+                      dismissOnTouchOutside: false,
+                      title: "The end",
+                      desc: 'You finished this flashcard set',
+                      btnOkOnPress: () {
+                        Navigator.pushNamed(
+                            context, PageConst.flahscardHomePage,
+                            arguments: widget.uid);
+                      }).show();
+                }
               },
               child: FaIcon(Icons.check),
               backgroundColor: Colors.green,
@@ -160,8 +195,36 @@ class _FlashcardsPageState extends State<FlashcardsPage> {
   void goToNextFlashcard() {
     _pageController.nextPage(
         duration: Duration(milliseconds: 1000), curve: Curves.easeInOut);
+    // if (currentPage < MAX_FLASHCARDS) {
+    //   _pageController.nextPage(
+    //       duration: Duration(milliseconds: 1000), curve: Curves.easeInOut);
+    // } else {
+    //   AwesomeDialog(
+    //       context: context,
+    //       showCloseIcon: false,
+    //       title: "The end",
+    //       desc: 'You finished this flashcard set',
+    //       btnOkOnPress: () {
+    //         Navigator.pushNamed(context, PageConst.flahscardHomePage,
+    //             arguments: widget.additionalParameter);
+    //       }).show();
+    //   //_endOfFlashcardsWidget(context, widget.additionalParameter);
+    // }
   }
 }
+
+// AwesomeDialog _endOfFlashcardsWidget(context, arg) {
+//   print("AAAAA");
+//   return AwesomeDialog(
+//       context: context,
+//       showCloseIcon: false,
+//       title: "The end",
+//       desc: 'You finished this flashcard set',
+//       btnOkOnPress: () {
+//         Navigator.pushNamed(context, PageConst.flahscardHomePage,
+//             arguments: arg);
+//       }).show()
+// }
 
 Widget _buildCardSide(String text) {
   return Column(

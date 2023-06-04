@@ -7,13 +7,13 @@ import '../../../app_const.dart';
 import '../../domain/entities/set_entity.dart';
 import '../cubit/auth/auth_cubit.dart';
 import '../cubit/stats/stats_cubit.dart';
+import 'package:note_app/feature/presentation/widgets/no_items_widget.dart';
 
 class StatisticsPage extends StatefulWidget {
   final SetEntity setEntity;
-  final String additionalParameter;
+  final String uid;
 
-  const StatisticsPage(
-      {super.key, required this.setEntity, required this.additionalParameter});
+  const StatisticsPage({super.key, required this.setEntity, required this.uid});
 
   @override
   State<StatisticsPage> createState() => _StatisticsPageState();
@@ -22,10 +22,8 @@ class StatisticsPage extends StatefulWidget {
 class _StatisticsPageState extends State<StatisticsPage> {
   @override
   void initState() {
-    BlocProvider.of<StatsCubit>(context).getStats(
-        uid: widget.additionalParameter, setName: widget.setEntity.name);
-    print(widget.additionalParameter);
-    print(widget.setEntity.name);
+    BlocProvider.of<StatsCubit>(context)
+        .getStats(uid: widget.uid, setName: widget.setEntity.name);
     super.initState();
   }
 
@@ -47,7 +45,7 @@ class _StatisticsPageState extends State<StatisticsPage> {
           IconButton(
               onPressed: () {
                 Navigator.pushNamed(context, PageConst.flahscardHomePage,
-                    arguments: widget.additionalParameter);
+                    arguments: widget.uid);
               },
               icon: Icon(Icons.arrow_back)),
         ],
@@ -69,7 +67,7 @@ class _StatisticsPageState extends State<StatisticsPage> {
       children: [
         Expanded(
           child: statsLoadedState.stats.isEmpty
-              ? _noNotesWidget()
+              ? NoItemsWidget('No statistics here yet')
               : GridView.builder(
                   itemCount: statsLoadedState.stats.length,
                   gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
@@ -108,20 +106,6 @@ class _StatisticsPageState extends State<StatisticsPage> {
                 ),
         ),
       ],
-    );
-  }
-
-  Widget _noNotesWidget() {
-    return Center(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          SizedBox(
-            height: 10,
-          ),
-          Text("No stats here yet"),
-        ],
-      ),
     );
   }
 }

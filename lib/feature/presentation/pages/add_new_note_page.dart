@@ -5,7 +5,6 @@ import 'package:flutter_icons/flutter_icons.dart';
 import 'package:intl/intl.dart';
 import 'package:note_app/feature/domain/entities/note_entity.dart';
 import 'package:note_app/feature/presentation/cubit/note/note_cubit.dart';
-import 'package:note_app/feature/presentation/widgets/common.dart';
 
 class AddNewNotePage extends StatefulWidget {
   final String uid;

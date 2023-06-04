@@ -22,7 +22,7 @@ class FlashcardCubit extends Cubit<FlashcardState> {
     required this.getFlashcardsUseCase,
   }) : super(FlashcardInitial());
 
-  Future<void> getSet({required String? uid}) async {
+  Future<void> getFlashcard({required String? uid}) async {
     emit(FlashcardLoading());
     try {
       getFlashcardsUseCase.call(uid!).listen((notes) {

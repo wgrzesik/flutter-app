@@ -9,7 +9,6 @@ import '../../../app_const.dart';
 import '../../domain/entities/user_entity.dart';
 import '../cubit/auth/auth_cubit.dart';
 import '../cubit/user/user_cubit.dart';
-import '../widgets/common.dart';
 import 'home_page.dart';
 
 class SignInPage extends StatefulWidget {
@@ -86,7 +85,6 @@ class _SignInPageState extends State<SignInPage> {
         ),
         Container(
           height: 120,
-          //child: Image.asset("assets/notebook.png"),
         ),
         const SizedBox(
           height: 40,

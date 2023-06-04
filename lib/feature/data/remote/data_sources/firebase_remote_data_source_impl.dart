@@ -157,7 +157,7 @@ class FirebaseRemoteDataSourceImpl implements FirebaseRemoteDataSource {
         uid: statsEntity.uid,
         set: statsEntity.set,
         term: statsEntity.term,
-        amount: 1,
+        amount: 0,
       ).toDocument();
       statsCollectionRef.doc(statsId).set(newStats);
     } else {
@@ -171,18 +171,48 @@ class FirebaseRemoteDataSourceImpl implements FirebaseRemoteDataSource {
   }
 
   @override
-  Future<void> updateStats(StatsEntity stats) async {
-    Map<String, dynamic> statsMap = Map();
-    final noteCollectionRef = firestore
+  Future<void> updateStats(StatsEntity statsEntity) async {
+    final statsCollectionRef = firestore
         .collection("users")
-        .doc(stats.uid)
+        .doc(statsEntity.uid)
         .collection("sets")
         .doc("nature")
         .collection("stats");
 
-    if (stats.amount != null) statsMap['note'] = stats.amount;
+    final statsId = statsCollectionRef.doc().id;
 
-    noteCollectionRef.doc(stats.statsId).update(statsMap);
+    final querySnapshot = await statsCollectionRef
+        .where("term", isEqualTo: statsEntity.term)
+        .get();
+
+    if (querySnapshot.docs.isEmpty) {
+      // Create new stats if it doesn't exist
+      final newStats = StatsModel(
+        uid: statsEntity.uid,
+        set: statsEntity.set,
+        term: statsEntity.term,
+        amount: 1,
+      ).toDocument();
+      statsCollectionRef.doc(statsId).set(newStats);
+    } else {
+      // Update stats by increasing amount by 1
+      final statsDoc = querySnapshot.docs.first;
+      final currentAmount = statsDoc.data()['amount'] as int;
+      final updatedAmount = currentAmount + 1;
+
+      statsCollectionRef.doc(statsDoc.id).update({'amount': updatedAmount});
+    }
+    // Map<String, dynamic> statsMap = Map();
+    // final noteCollectionRef = firestore
+    //     .collection("users")
+    //     .doc(stats.uid)
+    //     .collection("sets")
+    //     .doc("nature")
+    //     .collection("stats");
+
+    // if (stats.amount != null) statsMap['note'] = stats.amount;
+
+    // noteCollectionRef.doc(stats.statsId).update(statsMap);
   }
 
   @override
