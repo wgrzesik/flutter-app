@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:note_app/feature/data/remote/models/note_model.dart';
 import 'package:note_app/feature/data/remote/models/user_model.dart';
@@ -168,7 +170,6 @@ class FirebaseRemoteDataSourceImpl implements FirebaseRemoteDataSource {
                 .collection("stats");
 
             final statsId = statsCollectionRef.doc().id;
-
             final newStats = StatsModel(
               uid: uid,
               set: set.name,
@@ -180,6 +181,110 @@ class FirebaseRemoteDataSourceImpl implements FirebaseRemoteDataSource {
         });
       }
     });
+  }
+
+  @override
+  Stream<List<StatsEntity>> srs(String uid, String setName) {
+    final srsStreamController = StreamController<List<StatsEntity>>();
+    List<StatsEntity> listOfStatsEntity = [];
+    final srsCollectionRef = firestore
+        .collection("users")
+        .doc(uid)
+        .collection("sets")
+        .doc(setName)
+        .collection("stats");
+
+    final srsStream = srsCollectionRef.snapshots().map((querySnap) {
+      return querySnap.docs
+          .map((docSnap) => StatsModel.fromSnapshot(docSnap))
+          .toList();
+    });
+
+    srsStream.listen((List<StatsEntity> stats) {
+      StatsEntity highestStatsEntity;
+      int highestAmount = 0;
+
+      //Map<int, StatsEntity> flashcardsMap = {};
+      final flashcardsMap = <int, List<StatsEntity>>{};
+      void addValueToMap<K, V>(Map<K, List<V>> map, K key, V value) =>
+          map.update(key, (list) => list..add(value), ifAbsent: () => [value]);
+
+      for (StatsEntity statsEntity in stats) {
+        addValueToMap(flashcardsMap, statsEntity.amount, statsEntity);
+        if (statsEntity.amount! > highestAmount) {
+          highestAmount = statsEntity.amount!;
+          highestStatsEntity = statsEntity;
+        }
+        print(highestAmount);
+      }
+      // for (int i = 0; i < flashcardsMap.length; i++) {
+      //   if (flashcardsMap.containsKey(i)) {
+      //     StatsEntity s = flashcardsMap[i]!;
+      //     listOfStatsEntity.add(s);
+      //   }
+      // }
+
+      // if (flashcardsMap.containsKey(highestAmount)) {
+      //   StatsEntity s = flashcardsMap[highestAmount]!;
+      //   listOfStatsEntity.add(s);
+      // } else {
+      //   print('Not found');
+      // }
+
+      // int count = 0;
+      // int currentAmount = 1;
+
+      // while (count < 2) {
+      //   if (!flashcardsMap.containsKey(currentAmount)) {
+      //     // Flashcard with the current amount is missing, find the next available flashcard
+      //     for (int i = currentAmount + 1; i <= highestAmount; i++) {
+      //       if (flashcardsMap.containsKey(i)) {
+      //         StatsEntity flashcard = flashcardsMap[i]!;
+      //         //listOfStatsEntity.add(flashcard);
+      //         print(flashcard.term);
+      //         // Process the flashcard with amount equal to 'i'
+      //         count++;
+      //         currentAmount = i;
+      //         break;
+      //       }
+      //     }
+      //   } else {
+      //     // Flashcard with the current amount is present
+      //     StatsEntity flashcard = flashcardsMap[currentAmount]!;
+      //     listOfStatsEntity.add(flashcard);
+      //     print(flashcard.term);
+      //     // Process the flashcard with amount equal to 'currentAmount'
+      //     count++;
+      //   }
+
+      //   currentAmount = (currentAmount % highestAmount) +
+      //       1; // Circle back to the highest amount if needed
+      // }
+      int count = 0;
+      int currentAmount = 0;
+
+      while (count < 5) {
+        if (!flashcardsMap.containsKey(currentAmount)) {
+          currentAmount = (currentAmount % highestAmount) + 1;
+          continue;
+        }
+
+        if (flashcardsMap[currentAmount]!.isEmpty) {
+          currentAmount = (currentAmount % highestAmount) + 1;
+          continue;
+        }
+
+        StatsEntity flashcard = flashcardsMap[currentAmount]!.removeAt(0);
+        listOfStatsEntity.add(flashcard);
+        count++;
+
+        currentAmount = (currentAmount % highestAmount) + 1;
+      }
+
+      srsStreamController.add(listOfStatsEntity);
+    });
+
+    return srsStreamController.stream;
   }
 
   @override

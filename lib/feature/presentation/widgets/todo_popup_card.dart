@@ -66,6 +66,18 @@ class TodoPopupCard extends StatelessWidget {
                                 child: Container(
                                     child: Text("Go to the set!",
                                         style: TextStyle(fontSize: 16))))),
+                        Container(
+                            margin: const EdgeInsets.all(8),
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(5),
+                            ),
+                            child: GestureDetector(
+                                onTap: () {
+                                  goToChoosenPage(context, PageConst.srsPage);
+                                },
+                                child: Container(
+                                    child: Text("Go to the SRS!",
+                                        style: TextStyle(fontSize: 16))))),
                       ],
                     ),
                   ),

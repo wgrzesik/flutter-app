@@ -64,4 +64,8 @@ class FirebaseRepositoryImpl extends FirebaseRepository {
   @override
   Stream<List<StatsEntity>> getStats(String uid, String setName) =>
       remoteDataSource.getStats(uid, setName);
+
+  @override
+  Stream<List<StatsEntity>> srs(String uid, String setName) =>
+      remoteDataSource.srs(uid, setName);
 }

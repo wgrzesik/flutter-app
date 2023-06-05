@@ -28,8 +28,6 @@ class _FlashcardsPageState extends State<FlashcardsPage> {
   int currentPage = 0;
   int MAX_FLASHCARDS = 20;
 
-  // bool isItFirstTime = true;
-
   final PageController _pageController = PageController(initialPage: 0);
 
   @override
@@ -70,9 +68,6 @@ class _FlashcardsPageState extends State<FlashcardsPage> {
       body: BlocBuilder<FlashcardCubit, FlashcardState>(
         builder: (context, flashcardState) {
           if (flashcardState is FlashcardLoaded) {
-            // if (isItFirstTime) {
-            //   // _initiateStats(flashcardState);
-            // }
             return _bodyWidget(flashcardState);
           }
           return const Center(child: CircularProgressIndicator());
@@ -80,19 +75,6 @@ class _FlashcardsPageState extends State<FlashcardsPage> {
       ),
     );
   }
-
-  // _initiateStats(FlashcardLoaded setLoadedState) {
-  //   isItFirstTime = false;
-  //   for (int i = 0; i < setLoadedState.flashcards.length; i++) {
-  //     //final setEntity = setLoadedState.flashcards[i];
-  //     BlocProvider.of<StatsCubit>(context).addStats(
-  //         stats: StatsEntity(
-  //             set: widget.setEntity.name,
-  //             amount: 0,
-  //             uid: widget.uid,
-  //             term: setLoadedState.flashcards[i].term));
-  //   }
-  // }
 
   Widget _bodyWidget(FlashcardLoaded setLoadedState) {
     return Column(

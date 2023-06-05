@@ -11,6 +11,7 @@ import 'feature/presentation/pages/add_new_note_page.dart';
 import 'feature/presentation/pages/flashcards_page.dart';
 import 'feature/presentation/pages/sign_in_page.dart';
 import 'feature/presentation/pages/sign_up_page.dart';
+import 'feature/presentation/pages/srs_page.dart';
 import 'feature/presentation/pages/statistics_page.dart';
 import 'feature/presentation/pages/update_note_page.dart';
 import 'feature/presentation/widgets/error_page.dart';
@@ -88,6 +89,16 @@ class OnGenerateRoute {
               widget: const ErrorPage(),
             );
           }
+        }
+      case PageConst.srsPage:
+        {
+          final arguments = settings.arguments as MultiplePageArguments;
+          return materialBuilder(
+            widget: SrsPage(
+              setEntity: arguments.setEntity,
+              uid: arguments.uid,
+            ),
+          );
         }
       default:
         return materialBuilder(widget: const ErrorPage());

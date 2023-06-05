@@ -8,6 +8,7 @@ import 'package:note_app/feature/domain/use_cases/add_new_note_usecase.dart';
 import 'package:note_app/feature/domain/use_cases/add_stats_usecase.dart';
 import 'package:note_app/feature/domain/use_cases/get_sets_usecase.dart';
 import 'package:note_app/feature/domain/use_cases/get_stats_usecase.dart';
+import 'package:note_app/feature/domain/use_cases/srs_usecase.dart';
 import 'package:note_app/feature/presentation/cubit/auth/auth_cubit.dart';
 import 'package:note_app/feature/presentation/cubit/stats/stats_cubit.dart';
 import 'feature/data/repositories/firebase_repository_impl.dart';
@@ -52,7 +53,8 @@ Future<void> init() async {
   sl.registerFactory<StatsCubit>(() => StatsCubit(
       addStatsUseCase: sl.call(),
       updateStatsUseCase: sl.call(),
-      getStatsUseCase: sl.call()));
+      getStatsUseCase: sl.call(),
+      srsUseCase: sl.call()));
 
   //useCases
   sl.registerLazySingleton<AddNewNoteUseCase>(
@@ -85,6 +87,7 @@ Future<void> init() async {
       () => UpdateStatsUseCase(repository: sl.call()));
   sl.registerLazySingleton<GetStatsUseCase>(
       () => GetStatsUseCase(repository: sl.call()));
+  sl.registerLazySingleton<SrsUseCase>(() => SrsUseCase(repository: sl.call()));
 
   //repository
   sl.registerLazySingleton<FirebaseRepository>(

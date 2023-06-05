@@ -22,4 +22,5 @@ abstract class FirebaseRepository {
   Future<void> initializeStats(String stats);
   Future<void> updateStats(StatsEntity stats);
   Stream<List<StatsEntity>> getStats(String uid, String setName);
+  Stream<List<StatsEntity>> srs(String uid, String setName);
 }

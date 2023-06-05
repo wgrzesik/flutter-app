@@ -28,6 +28,8 @@ class _SignUpPageState extends State<SignUpPage> {
   TextEditingController _emailController = TextEditingController();
   TextEditingController _passwordController = TextEditingController();
 
+  bool shouldInitializeStats = false;
+
   GlobalKey<ScaffoldState> _globalKey = GlobalKey<ScaffoldState>();
 
   @override
@@ -48,8 +50,11 @@ class _SignUpPageState extends State<SignUpPage> {
               return BlocBuilder<AuthCubit, AuthState>(
                   builder: (context, authState) {
                 if (authState is Authenticated) {
-                  BlocProvider.of<StatsCubit>(context)
-                      .addStats(stats: authState.uid);
+                  if (shouldInitializeStats) {
+                    BlocProvider.of<StatsCubit>(context)
+                        .addStats(stats: authState.uid);
+                    shouldInitializeStats = false;
+                  }
                   return FlashcardHomePage(uid: authState.uid);
                 } else {
                   //_initiateStats();
@@ -187,6 +192,7 @@ class _SignUpPageState extends State<SignUpPage> {
   }
 
   void submitSignIn() {
+    shouldInitializeStats = true;
     if (_usernameController.text.isNotEmpty &&
         _emailController.text.isNotEmpty &&
         _passwordController.text.isNotEmpty) {
@@ -196,13 +202,6 @@ class _SignUpPageState extends State<SignUpPage> {
         email: _emailController.text,
         password: _passwordController.text,
       ));
-
-      // UserEntity user = UserEntity(
-      //   name: _usernameController.text,
-      //   email: _emailController.text,
-      //   password: _passwordController.text,
-      // );
-      // BlocProvider.of<StatsCubit>(context).addStats(stats: user);
     }
   }
 }

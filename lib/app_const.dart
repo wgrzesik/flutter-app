@@ -10,4 +10,5 @@ class PageConst {
   static const String flashcardsPage = "flashcardsPage";
   static const String statisticsPage = "statisticsPage";
   static const String flahscardHomePage = "flashcardHomePage";
+  static const String srsPage = "srsPage";
 }

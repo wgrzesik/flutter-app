@@ -22,4 +22,5 @@ abstract class FirebaseRemoteDataSource {
   Future<void> initializeStats(String uid);
   Future<void> updateStats(StatsEntity stats);
   Stream<List<StatsEntity>> getStats(String uid, String setName);
+  Stream<List<StatsEntity>> srs(String uid, String setName);
 }
