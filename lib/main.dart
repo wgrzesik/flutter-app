@@ -37,9 +37,13 @@ class MainApp extends StatelessWidget {
         BlocProvider<StatsCubit>(create: (_) => di.sl<StatsCubit>()),
       ],
       child: MaterialApp(
-          title: 'My App',
+          title: 'FlashcardWizard',
           debugShowCheckedModeBanner: false,
-          theme: ThemeData(primarySwatch: Colors.deepPurple),
+          themeMode: ThemeMode.system,
+          theme: ThemeData(
+            primarySwatch: Colors.purple,
+            fontFamily: 'Montserrat',
+          ),
           initialRoute: '/',
           onGenerateRoute: OnGenerateRoute.route,
           routes: {

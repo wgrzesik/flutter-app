@@ -3,6 +3,7 @@ import 'package:flutter/src/widgets/placeholder.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_icons/flutter_icons.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:note_app/feature/domain/entities/set_entity.dart';
 
 import '../../../app_const.dart';
@@ -57,7 +58,6 @@ class _SignUpPageState extends State<SignUpPage> {
                   }
                   return FlashcardHomePage(uid: authState.uid);
                 } else {
-                  //_initiateStats();
                   return _bodyWidget();
                 }
               });
@@ -92,100 +92,82 @@ class _SignUpPageState extends State<SignUpPage> {
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           const SizedBox(
-            height: 30,
+            height: 10,
           ),
-          GestureDetector(
-            onTap: () {
-              Navigator.pushNamedAndRemoveUntil(
-                  context, PageConst.signInPage, (route) => false);
-            },
-            child: Container(
-              height: 50,
-              width: 50,
-              alignment: Alignment.center,
-              decoration: BoxDecoration(
-                color: Colors.white,
-                border: Border.all(color: Colors.black.withOpacity(.6)),
-                shape: BoxShape.circle,
-              ),
-              child: const Icon(Icons.arrow_back_ios),
-            ),
+          const Text('Create account',
+              style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold)),
+          const SizedBox(
+            height: 10,
           ),
+          const FaIcon(FontAwesomeIcons.hatWizard, size: 60),
           const SizedBox(
             height: 30,
           ),
           Container(
             height: 50,
-            padding: const EdgeInsets.symmetric(horizontal: 10),
-            decoration: BoxDecoration(
-              color: Colors.black.withOpacity(.1),
-              borderRadius: BorderRadius.all(Radius.circular(10)),
-            ),
+            padding: const EdgeInsets.symmetric(horizontal: 20),
             child: TextField(
               controller: _usernameController,
               decoration: const InputDecoration(
-                  hintText: 'Username', border: InputBorder.none),
+                  labelText: 'Username',
+                  hintText: 'Username',
+                  border: OutlineInputBorder()),
             ),
           ),
-          SizedBox(
+          const SizedBox(
             height: 10,
           ),
           Container(
             height: 50,
-            padding: EdgeInsets.symmetric(horizontal: 10),
-            decoration: BoxDecoration(
-              color: Colors.black.withOpacity(.1),
-              borderRadius: BorderRadius.all(Radius.circular(10)),
-            ),
+            padding: const EdgeInsets.symmetric(horizontal: 20),
             child: TextField(
               controller: _emailController,
-              decoration: InputDecoration(
-                  hintText: 'Enter your email', border: InputBorder.none),
+              decoration: const InputDecoration(
+                  labelText: 'E-Mail',
+                  hintText: 'E-Mail',
+                  border: OutlineInputBorder()),
             ),
           ),
-          SizedBox(
+          const SizedBox(
             height: 10,
           ),
           Container(
             height: 50,
-            padding: EdgeInsets.symmetric(horizontal: 10),
-            decoration: BoxDecoration(
-              color: Colors.black.withOpacity(.1),
-              borderRadius: BorderRadius.all(Radius.circular(10)),
-            ),
+            padding: const EdgeInsets.symmetric(horizontal: 20),
             child: TextField(
-              obscureText: true,
               controller: _passwordController,
-              decoration: InputDecoration(
-                  hintText: 'Enter your Password', border: InputBorder.none),
+              decoration: const InputDecoration(
+                  labelText: 'Password',
+                  hintText: 'Password',
+                  border: OutlineInputBorder()),
             ),
           ),
-          SizedBox(
-            height: 15,
-          ),
-          GestureDetector(
-            onTap: () {
-              submitSignIn();
-            },
-            child: Container(
-              height: 45,
-              alignment: Alignment.center,
-              width: MediaQuery.of(context).size.width / 2,
-              decoration: BoxDecoration(
-                color: Colors.deepOrange.withOpacity(.8),
-                borderRadius: BorderRadius.all(
-                  Radius.circular(10),
-                ),
-              ),
-              child: Text(
-                "Create New Account",
-                style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
-              ),
-            ),
+          const SizedBox(
+            height: 20,
           ),
           SizedBox(
-            height: 10,
+            height: 45,
+            width: MediaQuery.of(context).size.width / 2,
+            child: ElevatedButton(
+                child: const Text('SIGN UP',
+                    style: TextStyle(
+                      fontSize: 18,
+                    )),
+                onPressed: () {
+                  submitSignIn();
+                }),
           ),
+          TextButton(
+              onPressed: () {
+                Navigator.pushNamedAndRemoveUntil(
+                    context, PageConst.signInPage, (route) => false);
+              },
+              child: const Text.rich(TextSpan(children: [
+                TextSpan(
+                    text: 'Already have an Account? ',
+                    style: TextStyle(color: Colors.black)),
+                TextSpan(text: 'LOGIN', style: TextStyle(color: Colors.purple))
+              ])))
         ],
       ),
     );

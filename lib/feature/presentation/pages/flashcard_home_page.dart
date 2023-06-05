@@ -38,9 +38,11 @@ class _FlashcardHomePageState extends State<FlashcardHomePage> {
     return Scaffold(
       appBar: AppBar(
         automaticallyImplyLeading: false,
-        title: Text(
-          "My sets",
-          style: TextStyle(fontSize: 20, fontWeight: FontWeight.w600),
+        title: const Center(
+          child: Text(
+            "FlashcardWizard",
+            style: TextStyle(fontSize: 20, fontWeight: FontWeight.w600),
+          ),
         ),
         actions: [
           IconButton(
@@ -51,7 +53,7 @@ class _FlashcardHomePageState extends State<FlashcardHomePage> {
                   PageConst.signInPage,
                 );
               },
-              icon: Icon(Icons.exit_to_app)),
+              icon: const Icon(Icons.exit_to_app)),
         ],
       ),
       body: BlocBuilder<SetCubit, SetState>(
@@ -69,24 +71,30 @@ class _FlashcardHomePageState extends State<FlashcardHomePage> {
   Widget _bodyWidget(SetLoaded setLoadedState) {
     return Column(
       children: [
+        // Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+        //   Text(
+        //     'Hey, name!',
+        //     style: TextStyle(fontSize: 16),
+        //   ),
+        //   Text('Explore Sets',
+        //       style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold))
+        // ]),
         Expanded(
-          child: setLoadedState.sets.isEmpty
-              ? NoItemsWidget('No sets here yet')
-              : GridView.builder(
-                  itemCount: setLoadedState.sets.length,
-                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                      crossAxisCount: 2, childAspectRatio: 1.2),
-                  itemBuilder: (_, index) {
-                    final _todo = setLoadedState.sets[index];
-                    final uidplusIndex = 'x';
+          child: GridView.builder(
+            itemCount: setLoadedState.sets.length,
+            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: 2, childAspectRatio: 1.2),
+            itemBuilder: (_, index) {
+              final _todo = setLoadedState.sets[index];
+              final uidplusIndex = 'x';
 
-                    return TodoCard(
-                        setEntity: _todo,
-                        uidTodoCard: uidplusIndex,
-                        index: index,
-                        uid: widget.uid);
-                  },
-                ),
+              return TodoCard(
+                  setEntity: _todo,
+                  uidTodoCard: uidplusIndex,
+                  index: index,
+                  uid: widget.uid);
+            },
+          ),
         ),
       ],
     );
