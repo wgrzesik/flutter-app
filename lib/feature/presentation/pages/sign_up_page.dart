@@ -25,13 +25,13 @@ class SignUpPage extends StatefulWidget {
 }
 
 class _SignUpPageState extends State<SignUpPage> {
-  TextEditingController _usernameController = TextEditingController();
-  TextEditingController _emailController = TextEditingController();
-  TextEditingController _passwordController = TextEditingController();
-
+  final _usernameController = TextEditingController();
+  final _emailController = TextEditingController();
+  final _passwordController = TextEditingController();
+  final _globalKey = GlobalKey<ScaffoldState>();
+  final _formField = GlobalKey<FormState>();
   bool shouldInitializeStats = false;
-
-  GlobalKey<ScaffoldState> _globalKey = GlobalKey<ScaffoldState>();
+  bool showPassword = true;
 
   @override
   void dispose() {
@@ -68,122 +68,144 @@ class _SignUpPageState extends State<SignUpPage> {
             if (userState is UserSuccess) {
               BlocProvider.of<AuthCubit>(context).loggedIn();
             }
-            if (userState is UserFailure) {
-              SnackBar(
-                backgroundColor: Colors.red,
-                duration: Duration(seconds: 3),
-                content: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text("invalid email"),
-                    Icon(FontAwesome.exclamation_triangle)
-                  ],
-                ),
-              );
-            }
+            // if (userState is UserFailure) {
+            //   print('User Failure');
+            // }
           },
         ));
   }
 
   _bodyWidget() {
-    return Container(
-      padding: const EdgeInsets.all(25),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          const SizedBox(
-            height: 10,
-          ),
-          const Text('Create account',
-              style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold)),
-          const SizedBox(
-            height: 10,
-          ),
-          const FaIcon(FontAwesomeIcons.hatWizard, size: 60),
-          const SizedBox(
-            height: 30,
-          ),
-          Container(
-            height: 50,
-            padding: const EdgeInsets.symmetric(horizontal: 20),
-            child: TextField(
+    return Form(
+      key: _formField,
+      child: Container(
+        padding: const EdgeInsets.all(25),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            // const SizedBox(
+            //   height: 10,
+            // ),
+            const Text('Create account',
+                style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold)),
+            const SizedBox(
+              height: 10,
+            ),
+            const FaIcon(FontAwesomeIcons.hatWizard, size: 60),
+            const SizedBox(
+              height: 10,
+            ),
+            TextFormField(
+              keyboardType: TextInputType.emailAddress,
               controller: _usernameController,
               decoration: const InputDecoration(
                   labelText: 'Username',
                   hintText: 'Username',
-                  border: OutlineInputBorder()),
+                  border: OutlineInputBorder(),
+                  prefixIcon: Icon(Icons.person_2_rounded)),
+              validator: (value) {
+                if (value!.isEmpty) {
+                  return 'Enter Username';
+                }
+              },
             ),
-          ),
-          const SizedBox(
-            height: 10,
-          ),
-          Container(
-            height: 50,
-            padding: const EdgeInsets.symmetric(horizontal: 20),
-            child: TextField(
+            const SizedBox(
+              height: 10,
+            ),
+            TextFormField(
+              keyboardType: TextInputType.emailAddress,
               controller: _emailController,
-              decoration: const InputDecoration(
+              decoration: InputDecoration(
                   labelText: 'E-Mail',
                   hintText: 'E-Mail',
-                  border: OutlineInputBorder()),
+                  border: OutlineInputBorder(),
+                  prefixIcon: Icon(Icons.mail)),
+              validator: (value) {
+                final bool validEmail = RegExp(
+                        r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+")
+                    .hasMatch(value!);
+                if (value.isEmpty) {
+                  return 'Enter Email';
+                } else if (!validEmail) {
+                  return 'Enter Valid Email';
+                }
+              },
             ),
-          ),
-          const SizedBox(
-            height: 10,
-          ),
-          Container(
-            height: 50,
-            padding: const EdgeInsets.symmetric(horizontal: 20),
-            child: TextField(
+            const SizedBox(
+              height: 10,
+            ),
+            TextFormField(
+              keyboardType: TextInputType.emailAddress,
               controller: _passwordController,
-              decoration: const InputDecoration(
+              obscureText: showPassword,
+              decoration: InputDecoration(
                   labelText: 'Password',
                   hintText: 'Password',
-                  border: OutlineInputBorder()),
-            ),
-          ),
-          const SizedBox(
-            height: 20,
-          ),
-          SizedBox(
-            height: 45,
-            width: MediaQuery.of(context).size.width / 2,
-            child: ElevatedButton(
-                child: const Text('SIGN UP',
-                    style: TextStyle(
-                      fontSize: 18,
-                    )),
-                onPressed: () {
-                  submitSignIn();
-                }),
-          ),
-          TextButton(
-              onPressed: () {
-                Navigator.pushNamedAndRemoveUntil(
-                    context, PageConst.signInPage, (route) => false);
+                  border: const OutlineInputBorder(),
+                  prefixIcon: const Icon(Icons.lock),
+                  suffixIcon: InkWell(
+                    onTap: () {
+                      setState(() {
+                        showPassword = !showPassword;
+                      });
+                    },
+                    child: Icon(
+                        showPassword ? Icons.visibility_off : Icons.visibility),
+                  )),
+              validator: (value) {
+                if (value!.isEmpty) {
+                  return 'Enter Password';
+                } else if (_passwordController.text.length < 6) {
+                  return 'Password is too short! Has to be more than 6 characters';
+                }
               },
-              child: const Text.rich(TextSpan(children: [
-                TextSpan(
-                    text: 'Already have an Account? ',
-                    style: TextStyle(color: Colors.black)),
-                TextSpan(text: 'LOGIN', style: TextStyle(color: Colors.purple))
-              ])))
-        ],
+            ),
+            const SizedBox(
+              height: 10,
+            ),
+            SizedBox(
+              height: 40,
+              width: MediaQuery.of(context).size.width / 2,
+              child: ElevatedButton(
+                  child: const Text('SIGN UP',
+                      style: TextStyle(
+                        fontSize: 18,
+                      )),
+                  onPressed: () {
+                    submitSignIn();
+                  }),
+            ),
+            TextButton(
+                onPressed: () {
+                  Navigator.pushNamedAndRemoveUntil(
+                      context, PageConst.signInPage, (route) => false);
+                },
+                child: const Text.rich(TextSpan(children: [
+                  TextSpan(
+                      text: 'Already have an Account? ',
+                      style: TextStyle(color: Colors.black)),
+                  TextSpan(
+                      text: 'LOGIN', style: TextStyle(color: Colors.purple))
+                ])))
+          ],
+        ),
       ),
     );
   }
 
   void submitSignIn() {
-    shouldInitializeStats = true;
-    if (_usernameController.text.isNotEmpty &&
-        _emailController.text.isNotEmpty &&
-        _passwordController.text.isNotEmpty) {
-      BlocProvider.of<UserCubit>(context).submitSignUp(
-          user: UserEntity(
-        name: _usernameController.text,
-        email: _emailController.text,
-        password: _passwordController.text,
-      ));
+    if (_formField.currentState!.validate()) {
+      shouldInitializeStats = true;
+      if (_usernameController.text.isNotEmpty &&
+          _emailController.text.isNotEmpty &&
+          _passwordController.text.isNotEmpty) {
+        BlocProvider.of<UserCubit>(context).submitSignUp(
+            user: UserEntity(
+          name: _usernameController.text,
+          email: _emailController.text,
+          password: _passwordController.text,
+        ));
+      }
     }
   }
 }

@@ -93,7 +93,7 @@ class _SrsPageState extends State<SrsPage> {
                         children: [
                           Center(
                             child: Text(
-                                "${statsLoadedState.stats[index].term}: ${statsLoadedState.stats[index].amount}",
+                                "${statsLoadedState.stats[index].amount}\n${statsLoadedState.stats[index].term}\n${statsLoadedState.stats[index].def}",
                                 overflow: TextOverflow.ellipsis,
                                 style: TextStyle(
                                   fontSize: 16,

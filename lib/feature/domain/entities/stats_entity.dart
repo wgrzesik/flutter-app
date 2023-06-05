@@ -6,11 +6,11 @@ class StatsEntity extends Equatable {
   final String? term;
   final int? amount;
   final String? uid;
-  final String? statsId;
+  final String? def;
 
-  StatsEntity({this.set, this.term, this.amount, this.uid, this.statsId});
+  StatsEntity({this.set, this.term, this.amount, this.uid, this.def});
 
   @override
   // TODO: implement props
-  List<Object?> get props => [set, term, amount, uid, statsId];
+  List<Object?> get props => [set, term, amount, uid, def];
 }

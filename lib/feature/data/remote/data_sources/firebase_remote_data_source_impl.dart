@@ -174,6 +174,7 @@ class FirebaseRemoteDataSourceImpl implements FirebaseRemoteDataSource {
               uid: uid,
               set: set.name,
               term: flashcardEntity.term,
+              def: flashcardEntity.def,
               amount: 0,
             ).toDocument();
             statsCollectionRef.doc(statsId).set(newStats);
@@ -240,201 +241,6 @@ class FirebaseRemoteDataSourceImpl implements FirebaseRemoteDataSource {
 
     return srsStreamController.stream;
   }
-  // Stream<List<StatsEntity>> srs(String uid, String setName) {
-  //   final srsStreamController = StreamController<List<StatsEntity>>();
-  //   List<StatsEntity> listOfStatsEntity = [];
-
-  //   final srsCollectionRef = firestore
-  //       .collection("users")
-  //       .doc(uid)
-  //       .collection("sets")
-  //       .doc(setName)
-  //       .collection("stats");
-
-  //   final srsStream = srsCollectionRef
-  //       .orderBy("amount", descending: true)
-  //       // .limit(1)
-  //       .snapshots()
-  //       .map((querySnap) {
-  //     return querySnap.docs
-  //         .map((docSnap) => StatsModel.fromSnapshot(docSnap))
-  //         .toList();
-  //   });
-
-  //   srsStream.listen((List<StatsEntity> stats) {
-  //     StatsEntity highestStatsEntity;
-  //     int highestAmount = 0;
-
-  //     final flashcardsList = List<List<StatsEntity>>.filled(100, [],
-  //         growable: false); // Assuming amount can range from 1 to 100
-
-  //     for (StatsEntity statsEntity in stats) {
-  //       flashcardsList[statsEntity.amount!].add(statsEntity);
-  //       if (statsEntity.amount! > highestAmount) {
-  //         highestAmount = statsEntity.amount!;
-  //         highestStatsEntity = statsEntity;
-  //       }
-  //     }
-
-  //     int count = 0;
-  //     int currentAmount = 1;
-
-  //     while (count < 10 && count < listOfStatsEntity.length) {
-  //       if (flashcardsList[currentAmount].isEmpty) {
-  //         currentAmount = currentAmount % highestAmount + 1;
-  //         continue;
-  //       }
-
-  //       StatsEntity flashcard = flashcardsList[currentAmount].removeAt(0);
-  //       listOfStatsEntity.add(flashcard);
-  //       count++;
-
-  //       currentAmount = currentAmount % highestAmount + 1;
-  //     }
-
-  //     srsStreamController.add(listOfStatsEntity);
-  //   });
-
-  //   return srsStreamController.stream;
-  // }
-
-  // THIS WORKS FOR UP TO 5/6 FLAHSCARDS
-  // @override
-  // Stream<List<StatsEntity>> srs(String uid, String setName) {
-  //   final srsStreamController = StreamController<List<StatsEntity>>();
-  //   List<StatsEntity> listOfStatsEntity = [];
-  //   final srsCollectionRef = firestore
-  //       .collection("users")
-  //       .doc(uid)
-  //       .collection("sets")
-  //       .doc(setName)
-  //       .collection("stats");
-
-  //   final srsStream = srsCollectionRef.snapshots().map((querySnap) {
-  //     return querySnap.docs
-  //         .map((docSnap) => StatsModel.fromSnapshot(docSnap))
-  //         .toList();
-  //   });
-
-  //   srsStream.listen((List<StatsEntity> stats) {
-  //     StatsEntity highestStatsEntity;
-  //     int highestAmount = 0;
-
-  //     //Map<int, StatsEntity> flashcardsMap = {};
-  //     final flashcardsMap = <int, List<StatsEntity>>{};
-  //     void addValueToMap<K, V>(Map<K, List<V>> map, K key, V value) =>
-  //         map.update(key, (list) => list..add(value), ifAbsent: () => [value]);
-
-  //     for (StatsEntity statsEntity in stats) {
-  //       addValueToMap(flashcardsMap, statsEntity.amount, statsEntity);
-  //       if (statsEntity.amount! > highestAmount) {
-  //         highestAmount = statsEntity.amount!;
-  //         highestStatsEntity = statsEntity;
-  //       }
-  //       print(highestAmount);
-  //     }
-
-  //     int count = 0;
-  //     int currentAmount = 0;
-
-  //     while (count < 10) {
-  //       if (!flashcardsMap.containsKey(currentAmount)) {
-  //         currentAmount = (currentAmount % highestAmount) + 1;
-  //         continue;
-  //       }
-
-  //       if (flashcardsMap[currentAmount]!.isEmpty) {
-  //         currentAmount = (currentAmount % highestAmount) + 1;
-  //         continue;
-  //       }
-
-  //       StatsEntity flashcard = flashcardsMap[currentAmount]!.removeAt(0);
-  //       listOfStatsEntity.add(flashcard);
-  //       count++;
-
-  //       currentAmount = (currentAmount % highestAmount) + 1;
-  //     }
-
-  //     srsStreamController.add(listOfStatsEntity);
-  //   });
-
-  // return srsStreamController.stream;
-  // }
-  // for (int i = 0; i < flashcardsMap.length; i++) {
-  //   if (flashcardsMap.containsKey(i)) {
-  //     StatsEntity s = flashcardsMap[i]!;
-  //     listOfStatsEntity.add(s);
-  //   }
-  // }
-  // if (flashcardsMap.containsKey(highestAmount)) {
-  //   StatsEntity s = flashcardsMap[highestAmount]!;
-  //   listOfStatsEntity.add(s);
-  // } else {
-  //   print('Not found');
-  // }
-  // int count = 0;
-  // int currentAmount = 1;
-  // while (count < 2) {
-  //   if (!flashcardsMap.containsKey(currentAmount)) {
-  //     // Flashcard with the current amount is missing, find the next available flashcard
-  //     for (int i = currentAmount + 1; i <= highestAmount; i++) {
-  //       if (flashcardsMap.containsKey(i)) {
-  //         StatsEntity flashcard = flashcardsMap[i]!;
-  //         //listOfStatsEntity.add(flashcard);
-  //         print(flashcard.term);
-  //         // Process the flashcard with amount equal to 'i'
-  //         count++;
-  //         currentAmount = i;
-  //         break;
-  //       }
-  //     }
-  //   } else {
-  //     // Flashcard with the current amount is present
-  //     StatsEntity flashcard = flashcardsMap[currentAmount]!;
-  //     listOfStatsEntity.add(flashcard);
-  //     print(flashcard.term);
-  //     // Process the flashcard with amount equal to 'currentAmount'
-  //     count++;
-  //   }
-  //   currentAmount = (currentAmount % highestAmount) +
-  //       1; // Circle back to the highest amount if needed
-  // }
-
-  // final srsTransformer =
-  //     StreamTransformer<List<StatsEntity>, List<StatsEntity>>.fromHandlers(
-  //   handleData: (stats, sink) {
-  //     if (stats.isEmpty) {
-  //       sink.add([]);
-  //       return;
-  //     }
-
-  //     final flashcardsMap = <int, List<StatsEntity>>{};
-  //     final availableFlashcards = <StatsEntity>[];
-
-  //     for (StatsEntity statsEntity in stats) {
-  //       flashcardsMap
-  //           .putIfAbsent(statsEntity.amount!, () => [])
-  //           .add(statsEntity);
-  //       availableFlashcards.add(statsEntity);
-  //     }
-
-  //     availableFlashcards.shuffle();
-  //     final selectedFlashcards = <StatsEntity>[];
-
-  //     int currentAmount = 1;
-  //     while (selectedFlashcards.length < 3) {
-  //       if (flashcardsMap.containsKey(currentAmount)) {
-  //         final flashcardsForAmount = flashcardsMap[currentAmount]!;
-  //         if (flashcardsForAmount.isNotEmpty) {
-  //           selectedFlashcards.add(flashcardsForAmount.removeAt(0));
-  //         }
-  //       }
-  //       currentAmount = (currentAmount % flashcardsMap.length) + 1;
-  //     }
-
-  //     sink.add(selectedFlashcards);
-  //   },
-  // );
 
   @override
   Future<void> updateStats(StatsEntity statsEntity) async {
@@ -457,6 +263,7 @@ class FirebaseRemoteDataSourceImpl implements FirebaseRemoteDataSource {
         uid: statsEntity.uid,
         set: statsEntity.set,
         term: statsEntity.term,
+        def: statsEntity.def,
         amount: 1,
       ).toDocument();
       statsCollectionRef.doc(statsId).set(newStats);
