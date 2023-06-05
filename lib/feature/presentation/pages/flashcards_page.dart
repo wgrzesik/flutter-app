@@ -45,24 +45,26 @@ class _FlashcardsPageState extends State<FlashcardsPage> {
     return Scaffold(
       appBar: AppBar(
         automaticallyImplyLeading: false,
+        leading: IconButton(
+            onPressed: () {
+              Navigator.pushNamed(context, PageConst.flahscardHomePage,
+                  arguments: widget.uid);
+            },
+            icon: Icon(Icons.arrow_back)),
         title: const Text(
           "My flashcards",
           style: TextStyle(fontSize: 20, fontWeight: FontWeight.w600),
         ),
         actions: [
-          FloatingActionButton(
-              heroTag: 'logg_out_from_flashcards',
+          IconButton(
               onPressed: () {
                 BlocProvider.of<AuthCubit>(context).loggedOut();
+                Navigator.pushNamed(
+                  context,
+                  PageConst.signInPage,
+                );
               },
-              child: Icon(Icons.exit_to_app)),
-          FloatingActionButton(
-              heroTag: 'go_back_from_flashcards',
-              onPressed: () {
-                Navigator.pushNamed(context, PageConst.flahscardHomePage,
-                    arguments: widget.uid);
-              },
-              child: Icon(Icons.arrow_back)),
+              icon: Icon(Icons.exit_to_app)),
         ],
       ),
       body: BlocBuilder<FlashcardCubit, FlashcardState>(

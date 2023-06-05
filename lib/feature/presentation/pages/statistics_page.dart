@@ -32,7 +32,13 @@ class _StatisticsPageState extends State<StatisticsPage> {
     return Scaffold(
       appBar: AppBar(
         automaticallyImplyLeading: false,
-        title: Text(
+        leading: IconButton(
+            onPressed: () {
+              Navigator.pushNamed(context, PageConst.flahscardHomePage,
+                  arguments: widget.uid);
+            },
+            icon: Icon(Icons.arrow_back)),
+        title: const Text(
           "My statistics",
           style: TextStyle(fontSize: 20, fontWeight: FontWeight.w600),
         ),
@@ -40,14 +46,12 @@ class _StatisticsPageState extends State<StatisticsPage> {
           IconButton(
               onPressed: () {
                 BlocProvider.of<AuthCubit>(context).loggedOut();
+                Navigator.pushNamed(
+                  context,
+                  PageConst.signInPage,
+                );
               },
               icon: Icon(Icons.exit_to_app)),
-          IconButton(
-              onPressed: () {
-                Navigator.pushNamed(context, PageConst.flahscardHomePage,
-                    arguments: widget.uid);
-              },
-              icon: Icon(Icons.arrow_back)),
         ],
       ),
       body: BlocBuilder<StatsCubit, StatsState>(
