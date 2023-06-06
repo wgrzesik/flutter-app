@@ -21,6 +21,7 @@ dependencies:
   flip_card: ^0.7.0
   font_awesome_flutter: ^10.4.0
   awesome_dialog: ^3.1.0
+  swipeable_card_stack: ^0.0.5
 
 dev_dependencies:
   flutter_test:

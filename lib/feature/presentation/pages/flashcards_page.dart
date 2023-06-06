@@ -5,7 +5,6 @@ import 'package:flutter/src/widgets/placeholder.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../app_const.dart';
-import '../../domain/entities/flashcard_entity.dart';
 import '../../domain/entities/set_entity.dart';
 import '../../domain/entities/stats_entity.dart';
 import '../cubit/auth/auth_cubit.dart';

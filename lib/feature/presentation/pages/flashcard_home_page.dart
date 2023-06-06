@@ -8,13 +8,7 @@ import 'package:note_app/feature/presentation/cubit/auth/auth_cubit.dart';
 import 'package:flip_card/flip_card.dart';
 
 import '../../../app_const.dart';
-import '../../../on_generate_route.dart';
-import '../../domain/entities/set_entity.dart';
-import '../../domain/entities/stats_entity.dart';
 import '../cubit/set/set_cubit.dart';
-import '../cubit/stats/stats_cubit.dart';
-import '../widgets/no_items_widget.dart';
-import 'hero_dialog_route.dart';
 import 'package:note_app/feature/presentation/widgets/todo_card.dart';
 
 class FlashcardHomePage extends StatefulWidget {

@@ -7,15 +7,11 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:note_app/feature/domain/entities/set_entity.dart';
 
 import '../../../app_const.dart';
-import '../../domain/entities/stats_entity.dart';
 import '../../domain/entities/user_entity.dart';
 import '../cubit/auth/auth_cubit.dart';
-import '../cubit/flashcard/flashcard_cubit.dart';
-import '../cubit/set/set_cubit.dart';
 import '../cubit/stats/stats_cubit.dart';
 import '../cubit/user/user_cubit.dart';
 import 'flashcard_home_page.dart';
-import 'home_page.dart';
 
 class SignUpPage extends StatefulWidget {
   const SignUpPage({super.key});

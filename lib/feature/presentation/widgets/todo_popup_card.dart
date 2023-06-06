@@ -2,7 +2,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 import '../../../app_const.dart';
-import '../../../on_generate_route.dart';
 import '../../domain/entities/multiple_page_arguments.dart';
 import '../../domain/entities/set_entity.dart';
 
