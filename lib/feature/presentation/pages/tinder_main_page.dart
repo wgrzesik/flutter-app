@@ -20,34 +20,19 @@ class TinderMain extends StatefulWidget {
 }
 
 class _TinderMainState extends State<TinderMain> {
-  late String setName;
-  late String uid;
-  late Future<List<StatsEntity>> statsFuture;
-  late List<Widget> firstThreeItems;
-
+  SwipeableCardSectionController? cardController;
   @override
   void initState() {
+    BlocProvider.of<StatsCubit>(context)
+        .srs(uid: widget.uid, setName: widget.setEntity.name);
     super.initState();
-    statsFuture = fetchStats();
-    setName = widget.setEntity.name!;
-    uid = widget.uid;
-  }
-
-  Future<List<StatsEntity>> fetchStats() async {
-    final listOfStats = await BlocProvider.of<StatsCubit>(context)
-        .srs(uid: widget.uid, setName: setName)
-        .first;
-    return listOfStats;
+    cardController = SwipeableCardSectionController();
   }
 
   @override
   Widget build(BuildContext context) {
-    final cardController = SwipeableCardSectionController();
-    double screenWidth = MediaQuery.of(context).size.width;
-    double screenHeight = MediaQuery.of(context).size.height;
-
-    String term = '';
-    String def = '';
+    // double screenWidth = MediaQuery.of(context).size.width;
+    // double screenHeight = MediaQuery.of(context).size.height;
     return Scaffold(
       appBar: AppBar(
         automaticallyImplyLeading: false,
@@ -66,93 +51,75 @@ class _TinderMainState extends State<TinderMain> {
           style: const TextStyle(fontSize: 20, fontWeight: FontWeight.w600),
         ),
       ),
-      body: StreamBuilder<List<StatsEntity>>(
-        // stream: BlocProvider.of<StatsCubit>(context)
-        //     .srs(uid: widget.uid, setName: widget.setEntity.name),
-        stream: Stream.fromFuture(statsFuture),
-        builder: (context, snapshot) {
-          if (snapshot.hasData) {
-            final listOfStatsEntity = snapshot.data!;
-            firstThreeItems = listOfStatsEntity
-                .asMap()
-                .map((index, stat) {
-                  return MapEntry(
-                      index,
-                      buildCard(screenWidth, screenHeight, stat.term, stat.def,
-                          index));
-                })
-                .values
-                .toList();
-            List<Widget> restOfItems = firstThreeItems.sublist(3);
-            return Column(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                SwipeableCardsSection(
-                  cardController: cardController,
-                  context: context,
-                  items: firstThreeItems,
-                  onCardSwiped: (dir, index, widget) {
-                    setState(() {
-                      term = listOfStatsEntity[index].term!;
-                      def = listOfStatsEntity[index].def!;
-                    });
-                    if (index < restOfItems.toList().length) {
-                      cardController.addItem(restOfItems[index]);
-                    }
-                    if (dir == Direction.left) {
-                      addToStatsWrongAnswer(context, setName, uid, term, def);
-                    } else if (dir == Direction.right) {
-                      // print('onLiked ${(widget as CardView).text} $index');
-                    } else if (dir == Direction.up) {
-                      return false;
-                    } else if (dir == Direction.down) {
-                      return false;
-                    }
-                  },
-                  enableSwipeUp: false,
-                  enableSwipeDown: false,
-                ),
-                Container(
-                  margin: const EdgeInsets.symmetric(vertical: 20.0),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: [
-                      FloatingActionButton(
-                          child: const Icon(Icons.chevron_left),
-                          onPressed: () {
-                            cardController.triggerSwipeLeft();
-                            addToStatsWrongAnswer(
-                                context, setName, uid, term, def);
-                          }),
-                      FloatingActionButton(
-                        child: const Icon(Icons.chevron_right),
-                        onPressed: () => cardController.triggerSwipeRight(),
-                      ),
-                    ],
-                  ),
-                ),
-              ],
-            );
+      body: BlocBuilder<StatsCubit, StatsState>(
+        builder: (context, flashcardState) {
+          if (flashcardState is StatsLoaded) {
+            return _bodyWidget(context, flashcardState, cardController!);
           }
-          return Center(child: CircularProgressIndicator());
+          return const Center(child: CircularProgressIndicator());
         },
       ),
     );
   }
 }
 
-void addToStatsWrongAnswer(context, setName, uid, term, def) {
-  BlocProvider.of<StatsCubit>(context).updateStats(
-      stats: StatsEntity(
-          set: setName,
-          //amount: currentPage,
-          uid: uid,
-          term: term,
-          def: def));
+Widget _bodyWidget(BuildContext context, StatsState statsState,
+    SwipeableCardSectionController cardController) {
+  if (statsState is StatsLoaded) {
+    final List<StatsEntity> listOfStatsEntity = statsState.stats;
+    final List<Widget> flashcards = [];
+
+    for (int index = 0; index < 10; index++) {
+      final StatsEntity stat = listOfStatsEntity[index];
+      final Widget flashcard = buildFlashcard(stat.term!, stat.def!, index);
+      flashcards.add(flashcard);
+    }
+    List<Widget> restOfItems = flashcards.sublist(3);
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        SwipeableCardsSection(
+          cardController: cardController,
+          context: context,
+          items: flashcards,
+          onCardSwiped: (dir, index, widget) {
+            if (index < restOfItems.toList().length) {
+              cardController.addItem(restOfItems[index]);
+            }
+          },
+          enableSwipeUp: false,
+          enableSwipeDown: false,
+        ),
+        Container(
+          margin: const EdgeInsets.symmetric(vertical: 20.0),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [
+              FloatingActionButton(
+                heroTag: 'wrong',
+                child: const Icon(Icons.chevron_left),
+                onPressed: () {
+                  //addToStatsWrongAnswer(context, setName, uid, term, def);
+                  cardController.triggerSwipeLeft();
+                },
+              ),
+              FloatingActionButton(
+                heroTag: 'right',
+                child: const Icon(Icons.chevron_right),
+                onPressed: () => cardController.triggerSwipeRight(),
+              ),
+            ],
+          ),
+        )
+      ],
+    );
+  }
+  return Center(child: CircularProgressIndicator());
 }
 
-Widget buildCard(screenWidth, screenHeight, textFront, textBack, index) {
-  final heroTag = 'cardHero_$index';
+Widget buildFlashcard(String term, String def, int index) {
+  final heroTag = 'flashcardHero_$index';
+
   return Card(
     color: Colors.deepPurple,
     shape: RoundedRectangleBorder(
@@ -163,13 +130,13 @@ Widget buildCard(screenWidth, screenHeight, textFront, textBack, index) {
       child: FlipCard(
         direction: FlipDirection.HORIZONTAL,
         front: SizedBox(
-          width: screenWidth,
-          height: screenHeight / 2,
+          // width: MediaQuery.of(context).size.width,
+          // height: MediaQuery.of(context).size.height / 2,
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
               Text(
-                textFront,
+                term,
                 style: const TextStyle(
                   color: Colors.white,
                   fontWeight: FontWeight.bold,
@@ -183,7 +150,7 @@ Widget buildCard(screenWidth, screenHeight, textFront, textBack, index) {
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
             Text(
-              textBack,
+              def,
               style: const TextStyle(
                 color: Colors.white,
                 fontWeight: FontWeight.bold,

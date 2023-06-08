@@ -56,35 +56,35 @@ class StatsCubit extends Cubit<StatsState> {
     }
   }
 
-  // Future<void> srs({required String uid, required String? setName}) async {
-  //   emit(StatsLoading());
-  //   try {
-  //     // final notes = await srsUseCase.call(uid, setName!);
-  //     // emit(StatsLoaded(stats: notes));
-  //     srsUseCase.call(uid, setName!).listen((notes) {
-  //       emit(StatsLoaded(stats: notes));
-  //     });
-  //   } on SocketException catch (_) {
-  //     emit(StatsFailure());
-  //   } catch (_) {
-  //     emit(StatsFailure());
-  //   }
-  // }
-
-  Stream<List<StatsEntity>> srs(
-      {required String uid, required String? setName}) {
+  Future<void> srs({required String uid, required String? setName}) async {
     emit(StatsLoading());
     try {
-      return srsUseCase.call(uid, setName!).map((notes) {
+      // final notes = await srsUseCase.call(uid, setName!);
+      // emit(StatsLoaded(stats: notes));
+      srsUseCase.call(uid, setName!).listen((notes) {
         emit(StatsLoaded(stats: notes));
-        return notes;
       });
     } on SocketException catch (_) {
       emit(StatsFailure());
-      return Stream.error('SocketException occurred');
     } catch (_) {
       emit(StatsFailure());
-      return Stream.error('Unknown error occurred');
     }
   }
+
+  // Stream<List<StatsEntity>> srs(
+  //     {required String uid, required String? setName}) {
+  //   emit(StatsLoading());
+  //   try {
+  //     return srsUseCase.call(uid, setName!).map((notes) {
+  //       emit(StatsLoaded(stats: notes));
+  //       return notes;
+  //     });
+  //   } on SocketException catch (_) {
+  //     emit(StatsFailure());
+  //     return Stream.error('SocketException occurred');
+  //   } catch (_) {
+  //     emit(StatsFailure());
+  //     return Stream.error('Unknown error occurred');
+  //   }
+  // }
 }
