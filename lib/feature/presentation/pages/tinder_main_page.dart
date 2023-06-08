@@ -1,6 +1,7 @@
 import 'package:flip_card/flip_card.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:note_app/feature/presentation/cubit/set/set_cubit.dart';
 
 import 'package:swipeable_card_stack/swipeable_card_stack.dart';
 
@@ -21,18 +22,22 @@ class TinderMain extends StatefulWidget {
 
 class _TinderMainState extends State<TinderMain> {
   SwipeableCardSectionController? cardController;
+  String? setName;
+  String? uid;
+  int current = 0;
+
   @override
   void initState() {
     BlocProvider.of<StatsCubit>(context)
         .srs(uid: widget.uid, setName: widget.setEntity.name);
     super.initState();
     cardController = SwipeableCardSectionController();
+    setName = widget.setEntity.name!;
+    uid = widget.uid;
   }
 
   @override
   Widget build(BuildContext context) {
-    // double screenWidth = MediaQuery.of(context).size.width;
-    // double screenHeight = MediaQuery.of(context).size.height;
     return Scaffold(
       appBar: AppBar(
         automaticallyImplyLeading: false,
@@ -54,19 +59,23 @@ class _TinderMainState extends State<TinderMain> {
       body: BlocBuilder<StatsCubit, StatsState>(
         builder: (context, flashcardState) {
           if (flashcardState is StatsLoaded) {
-            return _bodyWidget(context, flashcardState, cardController!);
+            final List<StatsEntity> listOfStatsEntity = flashcardState.stats;
+            return _bodyWidget(
+                context, listOfStatsEntity, cardController!, setName!, uid!);
           }
           return const Center(child: CircularProgressIndicator());
         },
       ),
     );
   }
-}
 
-Widget _bodyWidget(BuildContext context, StatsState statsState,
-    SwipeableCardSectionController cardController) {
-  if (statsState is StatsLoaded) {
-    final List<StatsEntity> listOfStatsEntity = statsState.stats;
+  Widget _bodyWidget(
+    BuildContext context,
+    List<StatsEntity> listOfStatsEntity,
+    SwipeableCardSectionController cardController,
+    String setName,
+    String uid,
+  ) {
     final List<Widget> flashcards = [];
 
     for (int index = 0; index < 10; index++) {
@@ -75,6 +84,7 @@ Widget _bodyWidget(BuildContext context, StatsState statsState,
       flashcards.add(flashcard);
     }
     List<Widget> restOfItems = flashcards.sublist(3);
+
     return Column(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
@@ -83,8 +93,24 @@ Widget _bodyWidget(BuildContext context, StatsState statsState,
           context: context,
           items: flashcards,
           onCardSwiped: (dir, index, widget) {
+            setState(() {
+              current = index;
+            });
             if (index < restOfItems.toList().length) {
               cardController.addItem(restOfItems[index]);
+            }
+            if (dir == Direction.left) {
+              addToStatsWrongAnswer(
+                  context,
+                  setName,
+                  uid,
+                  listOfStatsEntity[current].term!,
+                  listOfStatsEntity[current].def!);
+            } else if (dir == Direction.right) {
+            } else if (dir == Direction.up) {
+              return false;
+            } else if (dir == Direction.down) {
+              return false;
             }
           },
           enableSwipeUp: false,
@@ -99,7 +125,6 @@ Widget _bodyWidget(BuildContext context, StatsState statsState,
                 heroTag: 'wrong',
                 child: const Icon(Icons.chevron_left),
                 onPressed: () {
-                  //addToStatsWrongAnswer(context, setName, uid, term, def);
                   cardController.triggerSwipeLeft();
                 },
               ),
@@ -114,29 +139,39 @@ Widget _bodyWidget(BuildContext context, StatsState statsState,
       ],
     );
   }
-  return Center(child: CircularProgressIndicator());
-}
 
-Widget buildFlashcard(String term, String def, int index) {
-  final heroTag = 'flashcardHero_$index';
+  Widget buildFlashcard(String term, String def, int index) {
+    final heroTag = 'flashcardHero_$index';
 
-  return Card(
-    color: Colors.deepPurple,
-    shape: RoundedRectangleBorder(
-      borderRadius: BorderRadius.circular(8.0),
-    ),
-    child: Hero(
-      tag: heroTag,
-      child: FlipCard(
-        direction: FlipDirection.HORIZONTAL,
-        front: SizedBox(
-          // width: MediaQuery.of(context).size.width,
-          // height: MediaQuery.of(context).size.height / 2,
-          child: Column(
+    return Card(
+      color: Colors.deepPurple,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(8.0),
+      ),
+      child: Hero(
+        tag: heroTag,
+        child: FlipCard(
+          direction: FlipDirection.HORIZONTAL,
+          front: SizedBox(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                Text(
+                  term,
+                  style: const TextStyle(
+                    color: Colors.white,
+                    fontWeight: FontWeight.bold,
+                    fontSize: 24,
+                  ),
+                ),
+              ],
+            ),
+          ),
+          back: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
               Text(
-                term,
+                def,
                 style: const TextStyle(
                   color: Colors.white,
                   fontWeight: FontWeight.bold,
@@ -146,20 +181,18 @@ Widget buildFlashcard(String term, String def, int index) {
             ],
           ),
         ),
-        back: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            Text(
-              def,
-              style: const TextStyle(
-                color: Colors.white,
-                fontWeight: FontWeight.bold,
-                fontSize: 24,
-              ),
-            ),
-          ],
-        ),
       ),
-    ),
-  );
+    );
+  }
+
+  void addToStatsWrongAnswer(
+    BuildContext context,
+    String setName,
+    String uid,
+    String term,
+    String def,
+  ) {
+    BlocProvider.of<StatsCubit>(context).updateStats(
+        stats: StatsEntity(set: setName, uid: uid, term: term, def: def));
+  }
 }
