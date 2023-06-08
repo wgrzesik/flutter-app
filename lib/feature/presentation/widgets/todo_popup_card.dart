@@ -12,11 +12,12 @@ class TodoPopupCard extends StatelessWidget {
   final String uid;
 
   const TodoPopupCard({
+    super.key,
     required this.setEntity,
     required this.uidTodoPopupCard,
     required this.index,
     required this.uid,
-  }) : super();
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -24,13 +25,11 @@ class TodoPopupCard extends StatelessWidget {
       child: Padding(
         padding: const EdgeInsets.all(32.0),
         child: Hero(
-          // tag: uidTodoPopupCard + index.toString(),
           tag: '${uidTodoPopupCard}TPC$index',
           child: Material(
-            //color: AppColors.accentColor,
             elevation: 2,
             shape:
-                RoundedRectangleBorder(borderRadius: BorderRadius.circular(32)),
+                RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
             child: SingleChildScrollView(
               child: Padding(
                 padding: const EdgeInsets.all(16.0),
@@ -40,43 +39,38 @@ class TodoPopupCard extends StatelessWidget {
                     child: Column(
                       mainAxisSize: MainAxisSize.min,
                       children: [
-                        Container(
-                            margin: const EdgeInsets.all(8),
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(5),
-                            ),
-                            child: GestureDetector(
-                                onTap: () {
-                                  goToChoosenPage(
-                                      context, PageConst.statisticsPage);
-                                },
-                                child: Text("Go to the statistics!",
-                                    style: TextStyle(fontSize: 16)))),
-                        Container(
-                            margin: const EdgeInsets.all(8),
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(5),
-                            ),
-                            child: GestureDetector(
-                                onTap: () {
-                                  goToChoosenPage(
-                                      context, PageConst.flashcardsPage);
-                                },
-                                child: Container(
-                                    child: Text("Go to the set!",
-                                        style: TextStyle(fontSize: 16))))),
-                        Container(
-                            margin: const EdgeInsets.all(8),
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(5),
-                            ),
-                            child: GestureDetector(
-                                onTap: () {
-                                  goToChoosenPage(context, PageConst.srsPage);
-                                },
-                                child: Container(
-                                    child: Text("Go to the SRS!",
-                                        style: TextStyle(fontSize: 16))))),
+                        SizedBox(
+                          height: 45,
+                          width: MediaQuery.of(context).size.width / 2,
+                          child: ElevatedButton(
+                              style: ElevatedButton.styleFrom(
+                                  backgroundColor:
+                                      Colors.purple.withOpacity(.5)),
+                              child: const Text('Go to the statistics',
+                                  style: TextStyle(
+                                      fontSize: 15,
+                                      fontWeight: FontWeight.w600)),
+                              onPressed: () {
+                                goToChoosenPage(
+                                    context, PageConst.statisticsPage);
+                              }),
+                        ),
+                        const SizedBox(height: 20),
+                        SizedBox(
+                          height: 45,
+                          width: MediaQuery.of(context).size.width / 2,
+                          child: ElevatedButton(
+                              style: ElevatedButton.styleFrom(
+                                  backgroundColor:
+                                      Colors.indigo.withOpacity(.5)),
+                              child: const Text('Go to the set',
+                                  style: TextStyle(
+                                      fontSize: 15,
+                                      fontWeight: FontWeight.w600)),
+                              onPressed: () {
+                                goToChoosenPage(context, PageConst.srsPage);
+                              }),
+                        ),
                       ],
                     ),
                   ),

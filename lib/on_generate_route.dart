@@ -8,9 +8,8 @@ import 'feature/domain/entities/multiple_page_arguments.dart';
 import 'feature/presentation/pages/flashcards_page.dart';
 import 'feature/presentation/pages/sign_in_page.dart';
 import 'feature/presentation/pages/sign_up_page.dart';
-import 'feature/presentation/pages/srs_page.dart';
 import 'feature/presentation/pages/statistics_page.dart';
-import 'feature/presentation/pages/tinder_main_page.dart';
+import 'feature/presentation/pages/srs_page.dart';
 import 'feature/presentation/widgets/error_page.dart';
 
 class OnGenerateRoute {
@@ -91,14 +90,10 @@ class OnGenerateRoute {
         {
           final arguments = settings.arguments as MultiplePageArguments;
           return materialBuilder(
-            widget: TinderMain(
+            widget: SrsPage(
               setEntity: arguments.setEntity,
               uid: arguments.uid,
             ),
-            // widget: SrsPage(
-            //   setEntity: arguments.setEntity,
-            //   uid: arguments.uid,
-            // ),
           );
         }
       default:

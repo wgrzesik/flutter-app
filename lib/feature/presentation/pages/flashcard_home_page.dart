@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter/src/widgets/placeholder.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:note_app/feature/presentation/cubit/note/note_cubit.dart';
 import 'package:intl/intl.dart';
 import 'package:note_app/feature/presentation/cubit/auth/auth_cubit.dart';
@@ -32,10 +33,15 @@ class _FlashcardHomePageState extends State<FlashcardHomePage> {
     return Scaffold(
       appBar: AppBar(
         automaticallyImplyLeading: false,
+        leading: const Center(
+            child: Padding(
+          padding: EdgeInsets.only(left: 40),
+          child: FaIcon(FontAwesomeIcons.hatWizard),
+        )),
         title: const Center(
           child: Text(
             "FlashcardWizard",
-            style: TextStyle(fontSize: 20, fontWeight: FontWeight.w600),
+            style: TextStyle(fontSize: 22, fontWeight: FontWeight.w600),
           ),
         ),
         actions: [
@@ -47,7 +53,7 @@ class _FlashcardHomePageState extends State<FlashcardHomePage> {
                   PageConst.signInPage,
                 );
               },
-              icon: const Icon(Icons.exit_to_app)),
+              icon: const FaIcon(FontAwesomeIcons.rightFromBracket, size: 19)),
         ],
       ),
       body: BlocBuilder<SetCubit, SetState>(
@@ -56,7 +62,7 @@ class _FlashcardHomePageState extends State<FlashcardHomePage> {
             return _bodyWidget(flashcardState);
           }
 
-          return Center(child: CircularProgressIndicator());
+          return const Center(child: CircularProgressIndicator());
         },
       ),
     );
@@ -79,12 +85,12 @@ class _FlashcardHomePageState extends State<FlashcardHomePage> {
             gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                 crossAxisCount: 2, childAspectRatio: 1.2),
             itemBuilder: (_, index) {
-              final _todo = setLoadedState.sets[index];
-              final uidplusIndex = 'x';
+              final todo = setLoadedState.sets[index];
+              //const uidplusIndex = 'x';
 
               return TodoCard(
-                  setEntity: _todo,
-                  uidTodoCard: uidplusIndex,
+                  setEntity: todo,
+                  uidTodoCard: 'x',
                   index: index,
                   uid: widget.uid);
             },
