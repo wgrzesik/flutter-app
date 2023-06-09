@@ -71,7 +71,7 @@ class _StatisticsPageState extends State<StatisticsPage> {
       children: [
         Expanded(
           child: statsLoadedState.stats.isEmpty
-              ? NoItemsWidget('No statistics here yet')
+              ? noItemsWidget('No statistics here yet')
               : GridView.builder(
                   itemCount: statsLoadedState.stats.length,
                   gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(

@@ -1,22 +1,21 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:note_app/feature/presentation/widgets/todo_popup_card.dart';
-
+import 'package:note_app/feature/presentation/widgets/popup_card.dart';
 import '../../domain/entities/set_entity.dart';
 import '../pages/hero_dialog_route.dart';
 
-class TodoCard extends StatelessWidget {
+class GridItem extends StatelessWidget {
   final SetEntity setEntity;
   final String uidTodoCard;
   final int index;
   final String uid;
 
-  const TodoCard({
+  const GridItem({
+    super.key,
     required this.setEntity,
     required this.uidTodoCard,
     required this.index,
     required this.uid,
-  }) : super();
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -25,9 +24,9 @@ class TodoCard extends StatelessWidget {
         Navigator.of(context).push(
           HeroDialogRoute(
             builder: (context) => Center(
-              child: TodoPopupCard(
+              child: PopupCard(
                 setEntity: setEntity,
-                uidTodoPopupCard: '${uidTodoCard}TPC$index',
+                uidPopupCard: '$uidTodoCard$index',
                 index: index,
                 uid: uid,
               ),
@@ -54,8 +53,8 @@ class TodoCard extends StatelessWidget {
                             spreadRadius: 2,
                             offset: const Offset(0, 1.5))
                       ]),
-                  padding: EdgeInsets.all(10),
-                  margin: EdgeInsets.all(6),
+                  padding: const EdgeInsets.all(10),
+                  margin: const EdgeInsets.all(6),
                   child: Column(
                       crossAxisAlignment: CrossAxisAlignment.center,
                       mainAxisAlignment: MainAxisAlignment.center,
@@ -63,7 +62,7 @@ class TodoCard extends StatelessWidget {
                         Center(
                           child: Text("${setEntity.name}",
                               overflow: TextOverflow.ellipsis,
-                              style: TextStyle(
+                              style: const TextStyle(
                                 fontSize: 16,
                                 fontWeight: FontWeight.bold,
                               )),

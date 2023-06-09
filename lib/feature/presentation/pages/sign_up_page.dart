@@ -1,17 +1,12 @@
-import 'package:flutter/src/widgets/framework.dart';
-import 'package:flutter/src/widgets/placeholder.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_icons/flutter_icons.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:note_app/feature/domain/entities/set_entity.dart';
-
 import '../../../app_const.dart';
 import '../../domain/entities/user_entity.dart';
 import '../cubit/auth/auth_cubit.dart';
 import '../cubit/stats/stats_cubit.dart';
 import '../cubit/user/user_cubit.dart';
-import 'flashcard_home_page.dart';
+import 'home_page.dart';
 
 class SignUpPage extends StatefulWidget {
   const SignUpPage({super.key});
@@ -79,9 +74,6 @@ class _SignUpPageState extends State<SignUpPage> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            // const SizedBox(
-            //   height: 10,
-            // ),
             const Text('Create account',
                 style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold)),
             const SizedBox(
@@ -111,7 +103,7 @@ class _SignUpPageState extends State<SignUpPage> {
             TextFormField(
               keyboardType: TextInputType.emailAddress,
               controller: _emailController,
-              decoration: InputDecoration(
+              decoration: const InputDecoration(
                   labelText: 'E-Mail',
                   hintText: 'E-Mail',
                   border: OutlineInputBorder(),
@@ -125,6 +117,7 @@ class _SignUpPageState extends State<SignUpPage> {
                 } else if (!validEmail) {
                   return 'Enter Valid Email';
                 }
+                return null;
               },
             ),
             const SizedBox(

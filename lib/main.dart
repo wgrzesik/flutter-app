@@ -6,7 +6,7 @@ import 'package:note_app/on_generate_route.dart';
 import 'feature/presentation/cubit/flashcard/flashcard_cubit.dart';
 import 'feature/presentation/cubit/set/set_cubit.dart';
 import 'feature/presentation/cubit/user/user_cubit.dart';
-import 'feature/presentation/pages/flashcard_home_page.dart';
+import 'feature/presentation/pages/home_page.dart';
 import 'injection_container.dart' as di;
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';

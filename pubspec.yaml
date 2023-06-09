@@ -35,5 +35,4 @@ fonts:
   - family: Montserrat
     fonts:
       - asset: Montserrat-VariableFont_wght.ttf
-  # assets:
-  #   - assets/nature.json
+

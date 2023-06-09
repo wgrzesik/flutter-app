@@ -3,7 +3,7 @@ import 'package:flutter/widgets.dart';
 import 'package:note_app/app_const.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:note_app/feature/domain/entities/flashcard_entity.dart';
-import 'package:note_app/feature/presentation/pages/flashcard_home_page.dart';
+import 'package:note_app/feature/presentation/pages/home_page.dart';
 import 'feature/domain/entities/multiple_page_arguments.dart';
 import 'feature/presentation/pages/flashcards_page.dart';
 import 'feature/presentation/pages/sign_in_page.dart';

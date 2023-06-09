@@ -4,8 +4,7 @@ import 'package:flutter/src/widgets/placeholder.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_icons/flutter_icons.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:note_app/feature/presentation/pages/flashcard_home_page.dart';
-
+import 'package:note_app/feature/presentation/pages/home_page.dart';
 import '../../../app_const.dart';
 import '../../domain/entities/user_entity.dart';
 import '../cubit/auth/auth_cubit.dart';

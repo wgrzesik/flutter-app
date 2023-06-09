@@ -1,20 +1,18 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-
 import '../../../app_const.dart';
 import '../../domain/entities/multiple_page_arguments.dart';
 import '../../domain/entities/set_entity.dart';
 
-class TodoPopupCard extends StatelessWidget {
+class PopupCard extends StatelessWidget {
   final SetEntity setEntity;
-  final String uidTodoPopupCard;
+  final String uidPopupCard;
   final int index;
   final String uid;
 
-  const TodoPopupCard({
+  const PopupCard({
     super.key,
     required this.setEntity,
-    required this.uidTodoPopupCard,
+    required this.uidPopupCard,
     required this.index,
     required this.uid,
   });
@@ -25,7 +23,7 @@ class TodoPopupCard extends StatelessWidget {
       child: Padding(
         padding: const EdgeInsets.all(32.0),
         child: Hero(
-          tag: '${uidTodoPopupCard}TPC$index',
+          tag: '$uidPopupCard$index',
           child: Material(
             elevation: 2,
             shape:
