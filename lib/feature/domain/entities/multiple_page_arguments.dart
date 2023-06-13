@@ -6,3 +6,13 @@ class MultiplePageArguments {
 
   MultiplePageArguments(this.setEntity, this.uid);
 }
+
+class MultiplePageArgumentsSetName {
+  final String setName;
+  final String uid;
+  final int badAnswears;
+  final int goodAnswears;
+
+  MultiplePageArgumentsSetName(
+      this.setName, this.uid, this.badAnswears, this.goodAnswears);
+}

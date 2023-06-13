@@ -3,8 +3,12 @@ import 'dart:io';
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:note_app/feature/domain/entities/stats_entity.dart';
+import 'package:note_app/feature/domain/use_cases/get_correct_answers_usecase.dart';
+import 'package:note_app/feature/domain/use_cases/get_no_answers_usecase.dart';
 import 'package:note_app/feature/domain/use_cases/get_stats_usecase.dart';
+import 'package:note_app/feature/domain/use_cases/get_wrong_answers_usecase.dart';
 import 'package:note_app/feature/domain/use_cases/srs_usecase.dart';
+import 'package:note_app/feature/domain/use_cases/update_correct_answer_usecase.dart';
 import '../../../domain/use_cases/add_stats_usecase.dart';
 import '../../../domain/use_cases/update_stats_usecase.dart';
 
@@ -15,12 +19,20 @@ class StatsCubit extends Cubit<StatsState> {
   final UpdateStatsUseCase updateStatsUseCase;
   final GetStatsUseCase getStatsUseCase;
   final SrsUseCase srsUseCase;
+  final GetWrongAnswersUseCase getWrongAnswersUseCase;
+  final GetCorrectAnswersUseCase getCorrectAnswersUseCase;
+  final GetNoAnswersUseCase getNoAnswersUseCase;
+  final UpdateCorrectAnswerUseCase updateCorrectAnswerUseCase;
 
   StatsCubit({
     required this.addStatsUseCase,
     required this.updateStatsUseCase,
     required this.getStatsUseCase,
     required this.srsUseCase,
+    required this.getCorrectAnswersUseCase,
+    required this.getWrongAnswersUseCase,
+    required this.getNoAnswersUseCase,
+    required this.updateCorrectAnswerUseCase,
   }) : super(StatsInitial());
 
   Future<void> addStats({required String stats}) async {
@@ -71,20 +83,55 @@ class StatsCubit extends Cubit<StatsState> {
     }
   }
 
-  // Stream<List<StatsEntity>> srs(
-  //     {required String uid, required String? setName}) {
-  //   emit(StatsLoading());
-  //   try {
-  //     return srsUseCase.call(uid, setName!).map((notes) {
-  //       emit(StatsLoaded(stats: notes));
-  //       return notes;
-  //     });
-  //   } on SocketException catch (_) {
-  //     emit(StatsFailure());
-  //     return Stream.error('SocketException occurred');
-  //   } catch (_) {
-  //     emit(StatsFailure());
-  //     return Stream.error('Unknown error occurred');
-  //   }
-  // }
+  Future<void> getWrongAnswers(
+      {required String uid, required String? setName}) async {
+    emit(StatsLoading());
+    try {
+      getWrongAnswersUseCase.call(uid, setName!).listen((notes) {
+        emit(StatsLoaded(stats: notes));
+      });
+    } on SocketException catch (_) {
+      emit(StatsFailure());
+    } catch (_) {
+      emit(StatsFailure());
+    }
+  }
+
+  Future<void> getCorrectAnswers(
+      {required String uid, required String? setName}) async {
+    emit(StatsLoading());
+    try {
+      getCorrectAnswersUseCase.call(uid, setName!).listen((notes) {
+        emit(StatsLoaded(stats: notes));
+      });
+    } on SocketException catch (_) {
+      emit(StatsFailure());
+    } catch (_) {
+      emit(StatsFailure());
+    }
+  }
+
+  Future<void> getNoAnswers(
+      {required String uid, required String? setName}) async {
+    emit(StatsLoading());
+    try {
+      getNoAnswersUseCase.call(uid, setName!).listen((notes) {
+        emit(StatsLoaded(stats: notes));
+      });
+    } on SocketException catch (_) {
+      emit(StatsFailure());
+    } catch (_) {
+      emit(StatsFailure());
+    }
+  }
+
+  Future<void> updateCorrectAnswer({required StatsEntity stats}) async {
+    try {
+      await updateCorrectAnswerUseCase.call(stats);
+    } on SocketException catch (_) {
+      emit(StatsFailure());
+    } catch (_) {
+      emit(StatsFailure());
+    }
+  }
 }

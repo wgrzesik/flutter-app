@@ -1,13 +1,6 @@
 import 'dart:io';
-
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
-import 'package:note_app/feature/domain/entities/note_entity.dart';
-import 'package:note_app/feature/domain/use_cases/add_new_note_usecase.dart';
-import 'package:note_app/feature/domain/use_cases/delete_note_usecase.dart';
-import 'package:note_app/feature/domain/use_cases/get_notes_usecase.dart';
-import 'package:note_app/feature/domain/use_cases/update_note_usecase.dart';
-
 import '../../../domain/entities/flashcard_entity.dart';
 import '../../../domain/use_cases/get_flashcard_usecase.dart';
 

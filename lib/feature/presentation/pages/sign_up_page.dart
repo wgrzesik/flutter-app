@@ -20,7 +20,7 @@ class _SignUpPageState extends State<SignUpPage> {
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
   final _globalKey = GlobalKey<ScaffoldState>();
-  final _formField = GlobalKey<FormState>();
+  final _formField1 = GlobalKey<FormState>();
   bool shouldInitializeStats = false;
   bool showPassword = true;
 
@@ -59,16 +59,33 @@ class _SignUpPageState extends State<SignUpPage> {
             if (userState is UserSuccess) {
               BlocProvider.of<AuthCubit>(context).loggedIn();
             }
-            // if (userState is UserFailure) {
-            //   print('User Failure');
-            // }
+            if (userState is UserFailure) {
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                  backgroundColor: const Color.fromARGB(255, 155, 13, 13),
+                  duration: const Duration(seconds: 3),
+                  content: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: const [
+                      Icon(FontAwesomeIcons.triangleExclamation,
+                          color: Colors.white),
+                      SizedBox(width: 20),
+                      Text(
+                          "The email address is already in use \nby another account.",
+                          style: TextStyle(
+                              fontSize: 15, fontWeight: FontWeight.w500)),
+                    ],
+                  ),
+                ),
+              );
+            }
           },
         ));
   }
 
   _bodyWidget() {
     return Form(
-      key: _formField,
+      key: _formField1,
       child: Container(
         padding: const EdgeInsets.all(25),
         child: Column(
@@ -183,7 +200,7 @@ class _SignUpPageState extends State<SignUpPage> {
   }
 
   void submitSignIn() {
-    if (_formField.currentState!.validate()) {
+    if (_formField1.currentState!.validate()) {
       shouldInitializeStats = true;
       if (_usernameController.text.isNotEmpty &&
           _emailController.text.isNotEmpty &&

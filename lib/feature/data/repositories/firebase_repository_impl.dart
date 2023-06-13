@@ -1,6 +1,5 @@
 import 'package:note_app/feature/domain/entities/stats_entity.dart';
 import 'package:note_app/feature/domain/entities/user_entity.dart';
-import 'package:note_app/feature/domain/entities/note_entity.dart';
 import 'package:note_app/feature/domain/repositories/firebase_repository.dart';
 import '../../domain/entities/flashcard_entity.dart';
 import '../../domain/entities/set_entity.dart';
@@ -10,14 +9,6 @@ class FirebaseRepositoryImpl extends FirebaseRepository {
   final FirebaseRemoteDataSource remoteDataSource;
 
   FirebaseRepositoryImpl({required this.remoteDataSource});
-
-  @override
-  Future<void> addNewNote(NoteEntity note) async =>
-      remoteDataSource.addNewNote(note);
-
-  @override
-  Future<void> deleteNote(NoteEntity note) async =>
-      remoteDataSource.deleteNote(note);
 
   @override
   Future<void> getCreateCurrentUser(UserEntity user) async =>
@@ -37,14 +28,6 @@ class FirebaseRepositoryImpl extends FirebaseRepository {
 
   @override
   Future<void> signUp(UserEntity user) async => remoteDataSource.signUp(user);
-
-  @override
-  Future<void> updateNote(NoteEntity note) async =>
-      remoteDataSource.updateNote(note);
-
-  @override
-  Stream<List<NoteEntity>> getNotes(String uid) =>
-      remoteDataSource.getNotes(uid);
 
   @override
   Stream<List<SetEntity>> getSets() => remoteDataSource.getSets();
@@ -68,4 +51,21 @@ class FirebaseRepositoryImpl extends FirebaseRepository {
   @override
   Stream<List<StatsEntity>> srs(String uid, String setName) =>
       remoteDataSource.srs(uid, setName);
+
+  @override
+  Stream<List<StatsEntity>> getCorrectAnswersStats(
+          String uid, String setName) =>
+      remoteDataSource.getCorrectAnswersStats(uid, setName);
+
+  @override
+  Stream<List<StatsEntity>> getNoAnswersStats(String uid, String setName) =>
+      remoteDataSource.getNoAnswersStats(uid, setName);
+
+  @override
+  Stream<List<StatsEntity>> getWrongAnswersStats(String uid, String setName) =>
+      remoteDataSource.getWrongAnswersStats(uid, setName);
+
+  @override
+  Future<void> updateCorrectAnswerStats(StatsEntity statsEntity) async =>
+      remoteDataSource.updateCorrectAnswerStats(statsEntity);
 }

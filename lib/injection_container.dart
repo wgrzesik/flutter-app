@@ -4,27 +4,26 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:note_app/feature/data/remote/data_sources/firebase_remote_data_source.dart';
 import 'package:note_app/feature/data/remote/data_sources/firebase_remote_data_source_impl.dart';
 import 'package:note_app/feature/domain/repositories/firebase_repository.dart';
-import 'package:note_app/feature/domain/use_cases/add_new_note_usecase.dart';
 import 'package:note_app/feature/domain/use_cases/add_stats_usecase.dart';
 import 'package:note_app/feature/domain/use_cases/get_sets_usecase.dart';
 import 'package:note_app/feature/domain/use_cases/get_stats_usecase.dart';
+import 'package:note_app/feature/domain/use_cases/get_wrong_answers_usecase.dart';
 import 'package:note_app/feature/domain/use_cases/srs_usecase.dart';
+import 'package:note_app/feature/domain/use_cases/update_correct_answer_usecase.dart';
 import 'package:note_app/feature/presentation/cubit/auth/auth_cubit.dart';
 import 'package:note_app/feature/presentation/cubit/stats/stats_cubit.dart';
 import 'feature/data/repositories/firebase_repository_impl.dart';
-import 'feature/domain/use_cases/delete_note_usecase.dart';
+import 'feature/domain/use_cases/get_correct_answers_usecase.dart';
 import 'feature/domain/use_cases/get_create_current_user_usecase.dart';
 import 'feature/domain/use_cases/get_current_uid_usecase.dart';
 import 'feature/domain/use_cases/get_flashcard_usecase.dart';
-import 'feature/domain/use_cases/get_notes_usecase.dart';
+import 'feature/domain/use_cases/get_no_answers_usecase.dart';
 import 'feature/domain/use_cases/is_sign_in_usecase.dart';
 import 'feature/domain/use_cases/sign_in_usecase.dart';
 import 'feature/domain/use_cases/sign_out_usecase.dart';
 import 'feature/domain/use_cases/sign_up_usecase.dart';
-import 'feature/domain/use_cases/update_note_usecase.dart';
 import 'feature/domain/use_cases/update_stats_usecase.dart';
 import 'feature/presentation/cubit/flashcard/flashcard_cubit.dart';
-import 'feature/presentation/cubit/note/note_cubit.dart';
 import 'feature/presentation/cubit/set/set_cubit.dart';
 import 'feature/presentation/cubit/user/user_cubit.dart';
 
@@ -41,12 +40,6 @@ Future<void> init() async {
         signInUseCase: sl.call(),
         signUpUseCase: sl.call(),
       ));
-  sl.registerFactory<NoteCubit>(() => NoteCubit(
-        updateNoteUseCase: sl.call(),
-        getNotesUseCase: sl.call(),
-        deleteNoteUseCase: sl.call(),
-        addNewNoteUseCase: sl.call(),
-      ));
   sl.registerFactory<SetCubit>(() => SetCubit(getSetsUseCase: sl.call()));
   sl.registerFactory<FlashcardCubit>(
       () => FlashcardCubit(getFlashcardsUseCase: sl.call()));
@@ -54,19 +47,17 @@ Future<void> init() async {
       addStatsUseCase: sl.call(),
       updateStatsUseCase: sl.call(),
       getStatsUseCase: sl.call(),
-      srsUseCase: sl.call()));
+      srsUseCase: sl.call(),
+      getCorrectAnswersUseCase: sl.call(),
+      getNoAnswersUseCase: sl.call(),
+      getWrongAnswersUseCase: sl.call(),
+      updateCorrectAnswerUseCase: sl.call()));
 
   //useCases
-  sl.registerLazySingleton<AddNewNoteUseCase>(
-      () => AddNewNoteUseCase(repository: sl.call()));
-  sl.registerLazySingleton<DeleteNoteUseCase>(
-      () => DeleteNoteUseCase(repository: sl.call()));
   sl.registerLazySingleton<GetCreateCurrentUserUseCase>(
       () => GetCreateCurrentUserUseCase(repository: sl.call()));
   sl.registerLazySingleton<GetCurrentUidUseCase>(
       () => GetCurrentUidUseCase(repository: sl.call()));
-  sl.registerLazySingleton<GetNotesUseCase>(
-      () => GetNotesUseCase(repository: sl.call()));
   sl.registerLazySingleton<IsSignInUseCase>(
       () => IsSignInUseCase(repository: sl.call()));
   sl.registerLazySingleton<SignInUseCase>(
@@ -75,8 +66,6 @@ Future<void> init() async {
       () => SignOutUseCase(repository: sl.call()));
   sl.registerLazySingleton<SignUpUseCase>(
       () => SignUpUseCase(repository: sl.call()));
-  sl.registerLazySingleton<UpdateNoteUseCase>(
-      () => UpdateNoteUseCase(repository: sl.call()));
   sl.registerLazySingleton<GetSetsUseCase>(
       () => GetSetsUseCase(repository: sl.call()));
   sl.registerLazySingleton<GetFlashcardsUseCase>(
@@ -88,6 +77,14 @@ Future<void> init() async {
   sl.registerLazySingleton<GetStatsUseCase>(
       () => GetStatsUseCase(repository: sl.call()));
   sl.registerLazySingleton<SrsUseCase>(() => SrsUseCase(repository: sl.call()));
+  sl.registerLazySingleton<GetWrongAnswersUseCase>(
+      () => GetWrongAnswersUseCase(repository: sl.call()));
+  sl.registerLazySingleton<GetNoAnswersUseCase>(
+      () => GetNoAnswersUseCase(repository: sl.call()));
+  sl.registerLazySingleton<GetCorrectAnswersUseCase>(
+      () => GetCorrectAnswersUseCase(repository: sl.call()));
+  sl.registerLazySingleton<UpdateCorrectAnswerUseCase>(
+      () => UpdateCorrectAnswerUseCase(repository: sl.call()));
 
   //repository
   sl.registerLazySingleton<FirebaseRepository>(

@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:swipeable_card_stack/swipeable_card_stack.dart';
 import '../../../app_const.dart';
+import '../../domain/entities/multiple_page_arguments.dart';
 import '../../domain/entities/set_entity.dart';
 import '../../domain/entities/stats_entity.dart';
 import '../cubit/stats/stats_cubit.dart';
@@ -23,6 +24,8 @@ class _SrsPageState extends State<SrsPage> {
   String? setName;
   String? uid;
   int current = 0;
+  int goodAnswears = 0;
+  int badAnswears = 0;
 
   @override
   void initState() {
@@ -32,6 +35,11 @@ class _SrsPageState extends State<SrsPage> {
     cardController = SwipeableCardSectionController();
     setName = widget.setEntity.name!;
     uid = widget.uid;
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
   }
 
   @override
@@ -58,6 +66,7 @@ class _SrsPageState extends State<SrsPage> {
         builder: (context, flashcardState) {
           if (flashcardState is StatsLoaded) {
             final List<StatsEntity> listOfStatsEntity = flashcardState.stats;
+            //print(listOfStatsEntity.length);
             return _bodyWidget(
                 context, listOfStatsEntity, cardController!, setName!, uid!);
           }
@@ -97,6 +106,17 @@ class _SrsPageState extends State<SrsPage> {
             if (index < restOfItems.toList().length) {
               cardController.addItem(restOfItems[index]);
             }
+
+            if (index == 9) {
+              // go to the page that shows how many good and bad anwears and that you did good job!
+              final arguments = MultiplePageArgumentsSetName(
+                  setName, uid, badAnswears, goodAnswears);
+              Navigator.pushNamed(
+                context,
+                PageConst.endOfFlashcardsPage,
+                arguments: arguments,
+              );
+            }
             if (dir == Direction.left) {
               addToStatsWrongAnswer(
                   context,
@@ -104,7 +124,19 @@ class _SrsPageState extends State<SrsPage> {
                   uid,
                   listOfStatsEntity[current].term!,
                   listOfStatsEntity[current].def!);
+              setState(() {
+                badAnswears += 1;
+              });
             } else if (dir == Direction.right) {
+              addToStatsCorrectAnswer(
+                  context,
+                  setName,
+                  uid,
+                  listOfStatsEntity[current].term!,
+                  listOfStatsEntity[current].def!);
+              setState(() {
+                goodAnswears += 1;
+              });
             } else if (dir == Direction.up) {
               return false;
             } else if (dir == Direction.down) {
@@ -217,6 +249,17 @@ class _SrsPageState extends State<SrsPage> {
     String def,
   ) {
     BlocProvider.of<StatsCubit>(context).updateStats(
+        stats: StatsEntity(set: setName, uid: uid, term: term, def: def));
+  }
+
+  void addToStatsCorrectAnswer(
+    BuildContext context,
+    String setName,
+    String uid,
+    String term,
+    String def,
+  ) {
+    BlocProvider.of<StatsCubit>(context).updateCorrectAnswer(
         stats: StatsEntity(set: setName, uid: uid, term: term, def: def));
   }
 }

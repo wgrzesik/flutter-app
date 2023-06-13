@@ -7,20 +7,34 @@ class StatsModel extends StatsEntity {
       final String? term,
       final int? amount,
       final String? uid,
-      final String? def})
-      : super(set: set, term: term, amount: amount, uid: uid, def: def);
+      final String? def,
+      final int? goodAnswer})
+      : super(
+            set: set,
+            term: term,
+            amount: amount,
+            uid: uid,
+            def: def,
+            goodAnswer: goodAnswer);
 
   factory StatsModel.fromSnapshot(DocumentSnapshot documentSnapshot) {
     return StatsModel(
-      set: documentSnapshot.get('set'),
-      term: documentSnapshot.get('term'),
-      amount: documentSnapshot.get('amount'),
-      uid: documentSnapshot.get('uid'),
-      def: documentSnapshot.get('def'),
-    );
+        set: documentSnapshot.get('set'),
+        term: documentSnapshot.get('term'),
+        amount: documentSnapshot.get('amount'),
+        uid: documentSnapshot.get('uid'),
+        def: documentSnapshot.get('def'),
+        goodAnswer: documentSnapshot.get('goodAnswer'));
   }
 
   Map<String, dynamic> toDocument() {
-    return {"set": set, "term": term, "amount": amount, "uid": uid, "def": def};
+    return {
+      "set": set,
+      "term": term,
+      "amount": amount,
+      "uid": uid,
+      "def": def,
+      "goodAnswer": goodAnswer
+    };
   }
 }

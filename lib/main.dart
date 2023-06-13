@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:note_app/feature/presentation/cubit/auth/auth_cubit.dart';
-import 'package:note_app/feature/presentation/cubit/note/note_cubit.dart';
 import 'package:note_app/feature/presentation/cubit/stats/stats_cubit.dart';
 import 'package:note_app/on_generate_route.dart';
 import 'feature/presentation/cubit/flashcard/flashcard_cubit.dart';
@@ -31,7 +30,6 @@ class MainApp extends StatelessWidget {
         BlocProvider<AuthCubit>(
             create: (_) => di.sl<AuthCubit>()..appStarted()),
         BlocProvider<UserCubit>(create: (_) => di.sl<UserCubit>()),
-        BlocProvider<NoteCubit>(create: (_) => di.sl<NoteCubit>()),
         BlocProvider<SetCubit>(create: (_) => di.sl<SetCubit>()),
         BlocProvider<FlashcardCubit>(create: (_) => di.sl<FlashcardCubit>()),
         BlocProvider<StatsCubit>(create: (_) => di.sl<StatsCubit>()),

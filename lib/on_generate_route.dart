@@ -5,11 +5,17 @@ import 'package:flutter/cupertino.dart';
 import 'package:note_app/feature/domain/entities/flashcard_entity.dart';
 import 'package:note_app/feature/presentation/pages/home_page.dart';
 import 'feature/domain/entities/multiple_page_arguments.dart';
+import 'feature/presentation/pages/buttons_for_stats_page.dart';
+import 'feature/presentation/pages/correct_answers_stats.dart';
+import 'feature/presentation/pages/end_of_flashcards_page.dart';
 import 'feature/presentation/pages/flashcards_page.dart';
+import 'feature/presentation/pages/new_statistics_page.dart';
+import 'feature/presentation/pages/no_answers_page.dart';
 import 'feature/presentation/pages/sign_in_page.dart';
 import 'feature/presentation/pages/sign_up_page.dart';
 import 'feature/presentation/pages/statistics_page.dart';
 import 'feature/presentation/pages/srs_page.dart';
+import 'feature/presentation/pages/wrong_answers_stats.dart';
 import 'feature/presentation/widgets/error_page.dart';
 
 class OnGenerateRoute {
@@ -25,34 +31,6 @@ class OnGenerateRoute {
         {
           return materialBuilder(widget: SignUpPage());
         }
-      // case PageConst.addNotePage:
-      //   {
-      //     if (args is String) {
-      //       return materialBuilder(
-      //           widget: AddNewNotePage(
-      //         uid: args,
-      //       ));
-      //     } else {
-      //       return materialBuilder(
-      //         widget: ErrorPage(),
-      //       );
-      //     }
-      //     break;
-      //   }
-      // case PageConst.updateNotePage:
-      //   {
-      //     if (args is NoteEntity) {
-      //       return materialBuilder(
-      //           widget: UpdateNotePage(
-      //         noteEntity: args,
-      //       ));
-      //     } else {
-      //       return materialBuilder(
-      //         widget: ErrorPage(),
-      //       );
-      //     }
-      //     break;
-      //   }
       case PageConst.flashcardsPage:
         {
           final arguments = settings.arguments as MultiplePageArguments;
@@ -67,7 +45,7 @@ class OnGenerateRoute {
         {
           final arguments = settings.arguments as MultiplePageArguments;
           return materialBuilder(
-            widget: StatisticsPage(
+            widget: ButtonStatsPage(
               setEntity: arguments.setEntity,
               uid: arguments.uid,
             ),
@@ -91,6 +69,58 @@ class OnGenerateRoute {
           final arguments = settings.arguments as MultiplePageArguments;
           return materialBuilder(
             widget: SrsPage(
+              setEntity: arguments.setEntity,
+              uid: arguments.uid,
+            ),
+          );
+        }
+      case PageConst.endOfFlashcardsPage:
+        {
+          final arguments = settings.arguments as MultiplePageArgumentsSetName;
+          return materialBuilder(
+            widget: EndOfFlashcardsPage(
+              setName: arguments.setName,
+              uid: arguments.uid,
+              badAnswers: arguments.badAnswears,
+              goodAnswers: arguments.goodAnswears,
+            ),
+          );
+        }
+      case PageConst.buttonStatsPage:
+        {
+          final arguments = settings.arguments as MultiplePageArguments;
+          return materialBuilder(
+            widget: ButtonStatsPage(
+              setEntity: arguments.setEntity,
+              uid: arguments.uid,
+            ),
+          );
+        }
+      case PageConst.correctAnswersPage:
+        {
+          final arguments = settings.arguments as MultiplePageArguments;
+          return materialBuilder(
+            widget: CorrectAnswersPage(
+              setEntity: arguments.setEntity,
+              uid: arguments.uid,
+            ),
+          );
+        }
+      case PageConst.wrongAnswersPage:
+        {
+          final arguments = settings.arguments as MultiplePageArguments;
+          return materialBuilder(
+            widget: WrongAnswersPage(
+              setEntity: arguments.setEntity,
+              uid: arguments.uid,
+            ),
+          );
+        }
+      case PageConst.noAnswersPage:
+        {
+          final arguments = settings.arguments as MultiplePageArguments;
+          return materialBuilder(
+            widget: NoAnswersPage(
               setEntity: arguments.setEntity,
               uid: arguments.uid,
             ),
