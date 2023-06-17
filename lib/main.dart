@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:note_app/feature/presentation/cubit/auth/auth_cubit.dart';
 import 'package:note_app/feature/presentation/cubit/stats/stats_cubit.dart';
-import 'package:note_app/on_generate_route.dart';
 import 'feature/presentation/cubit/flashcard/flashcard_cubit.dart';
 import 'feature/presentation/cubit/set/set_cubit.dart';
 import 'feature/presentation/cubit/user/user_cubit.dart';
@@ -17,7 +16,7 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
   await di.init();
-  runApp(MainApp());
+  runApp(const MainApp());
 }
 
 class MainApp extends StatelessWidget {
@@ -52,9 +51,9 @@ class MainApp extends StatelessWidget {
                   return FlashcardHomePage(uid: authState.uid);
                 }
                 if (authState is UnAuthenticated) {
-                  return SignInPage();
+                  return const SignInPage();
                 }
-                return CircularProgressIndicator();
+                return const CircularProgressIndicator();
               });
             }
           }),

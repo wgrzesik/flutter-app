@@ -400,10 +400,11 @@ packages:
   swipeable_card_stack:
     dependency: "direct main"
     description:
-      name: swipeable_card_stack
-      sha256: "4b21357d042094b460554d2660fcd1486554ddba6389854055b1188c8fa85168"
-      url: "https://pub.dev"
-    source: hosted
+      path: "."
+      ref: HEAD
+      resolved-ref: "7dc3ef498ebf91fb7b071ffe5edcdfe8dbdf9253"
+      url: "https://github.com/wgrzesik/cta-flutter-tinder-card-animation.git"
+    source: git
     version: "0.0.5"
   syncfusion_flutter_charts:
     dependency: "direct main"

@@ -1,4 +1,3 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:equatable/equatable.dart';
 
 class SetEntity extends Equatable {
@@ -7,6 +6,5 @@ class SetEntity extends Equatable {
   SetEntity({this.name});
 
   @override
-  // TODO: implement props
   List<Object?> get props => [name];
 }

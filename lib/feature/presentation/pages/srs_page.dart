@@ -1,5 +1,9 @@
+import 'dart:async';
+import 'dart:math';
+
 import 'package:flip_card/flip_card.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:swipeable_card_stack/swipeable_card_stack.dart';
@@ -19,7 +23,7 @@ class SrsPage extends StatefulWidget {
   State<SrsPage> createState() => _SrsPageState();
 }
 
-class _SrsPageState extends State<SrsPage> {
+class _SrsPageState extends State<SrsPage> with TickerProviderStateMixin {
   SwipeableCardSectionController? cardController;
   String? setName;
   String? uid;
@@ -27,18 +31,25 @@ class _SrsPageState extends State<SrsPage> {
   int goodAnswears = 0;
   int badAnswears = 0;
 
+  late Ticker _ticker;
+
   @override
   void initState() {
+    _ticker = createTicker((_) {});
     BlocProvider.of<StatsCubit>(context)
         .srs(uid: widget.uid, setName: widget.setEntity.name);
-    super.initState();
     cardController = SwipeableCardSectionController();
     setName = widget.setEntity.name!;
     uid = widget.uid;
+    current = 0;
+    goodAnswears = 0;
+    badAnswears = 0;
+    super.initState();
   }
 
   @override
   void dispose() {
+    _ticker.dispose();
     super.dispose();
   }
 
@@ -63,12 +74,19 @@ class _SrsPageState extends State<SrsPage> {
         ),
       ),
       body: BlocBuilder<StatsCubit, StatsState>(
-        builder: (context, flashcardState) {
-          if (flashcardState is StatsLoaded) {
-            final List<StatsEntity> listOfStatsEntity = flashcardState.stats;
-            //print(listOfStatsEntity.length);
-            return _bodyWidget(
-                context, listOfStatsEntity, cardController!, setName!, uid!);
+        // buildWhen: (previous, current) => current is cubitSrs,
+        // bloc: cubitSrs,
+        builder: (context, flashcardStateSrs) {
+          if (flashcardStateSrs is StatsLoaded) {
+            final List<StatsEntity> listOfStatsEntitySrs =
+                flashcardStateSrs.stats;
+            print(listOfStatsEntitySrs.length);
+            if (listOfStatsEntitySrs.length < 1) {
+              Text('Nothing here!!');
+            } else {
+              return _bodyWidget(context, flashcardStateSrs.stats,
+                  cardController!, setName!, uid!);
+            }
           }
           return const Center(child: CircularProgressIndicator());
         },
@@ -78,14 +96,14 @@ class _SrsPageState extends State<SrsPage> {
 
   Widget _bodyWidget(
     BuildContext context,
-    List<StatsEntity> listOfStatsEntity,
+    final List<StatsEntity> listOfStatsEntity,
     SwipeableCardSectionController cardController,
     String setName,
     String uid,
   ) {
     final List<Widget> flashcards = [];
-
-    for (int index = 0; index < 10; index++) {
+    print(listOfStatsEntity.length);
+    for (int index = 0; index < min(listOfStatsEntity.length, 10); index++) {
       final StatsEntity stat = listOfStatsEntity[index];
       final Widget flashcard = buildFlashcard(stat.term!, stat.def!, index);
       flashcards.add(flashcard);
@@ -100,33 +118,42 @@ class _SrsPageState extends State<SrsPage> {
           context: context,
           items: flashcards,
           onCardSwiped: (dir, index, widget) {
-            setState(() {
-              current = index;
-            });
+            if (mounted) {
+              setState(() {
+                current = index;
+              });
+            }
             if (index < restOfItems.toList().length) {
               cardController.addItem(restOfItems[index]);
             }
 
             if (index == 9) {
+              // else {
               // go to the page that shows how many good and bad anwears and that you did good job!
+
               final arguments = MultiplePageArgumentsSetName(
                   setName, uid, badAnswears, goodAnswears);
-              Navigator.pushNamed(
+              var pushNamed = Navigator.pushNamed(
                 context,
                 PageConst.endOfFlashcardsPage,
                 arguments: arguments,
               );
+              cardController.enableSwipe(true);
+              cardController.enableSwipeListener(false);
             }
             if (dir == Direction.left) {
               addToStatsWrongAnswer(
-                  context,
-                  setName,
-                  uid,
-                  listOfStatsEntity[current].term!,
-                  listOfStatsEntity[current].def!);
-              setState(() {
-                badAnswears += 1;
-              });
+                context,
+                setName,
+                uid,
+                listOfStatsEntity[current].term!,
+                listOfStatsEntity[current].def!,
+              );
+              if (mounted) {
+                setState(() {
+                  badAnswears += 1;
+                });
+              }
             } else if (dir == Direction.right) {
               addToStatsCorrectAnswer(
                   context,
@@ -134,9 +161,11 @@ class _SrsPageState extends State<SrsPage> {
                   uid,
                   listOfStatsEntity[current].term!,
                   listOfStatsEntity[current].def!);
-              setState(() {
-                goodAnswears += 1;
-              });
+              if (mounted) {
+                setState(() {
+                  goodAnswears += 1;
+                });
+              }
             } else if (dir == Direction.up) {
               return false;
             } else if (dir == Direction.down) {

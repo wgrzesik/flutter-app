@@ -1,8 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/framework.dart';
-import 'package:flutter/src/widgets/placeholder.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_icons/flutter_icons.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:note_app/feature/presentation/pages/home_page.dart';
 import '../../../app_const.dart';
@@ -117,6 +114,7 @@ class _SignInPageState extends State<SignInPage> {
                 } else if (!validEmail) {
                   return 'Enter Valid Email';
                 }
+                return null;
               },
             ),
             const SizedBox(
@@ -146,6 +144,7 @@ class _SignInPageState extends State<SignInPage> {
                 } else if (_passwordController.text.length < 6) {
                   return 'Password is too short! Has to be more than 6 characters';
                 }
+                return null;
               },
             ),
             const SizedBox(

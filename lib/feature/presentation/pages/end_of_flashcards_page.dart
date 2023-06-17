@@ -1,10 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/framework.dart';
-import 'package:flutter/src/widgets/placeholder.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:pie_chart/pie_chart.dart';
 import '../../../app_const.dart';
-import '../../domain/entities/set_entity.dart';
 
 class EndOfFlashcardsPage extends StatefulWidget {
   final String setName;

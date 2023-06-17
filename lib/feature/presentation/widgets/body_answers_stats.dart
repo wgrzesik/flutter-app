@@ -1,6 +1,4 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-
 import '../cubit/stats/stats_cubit.dart';
 import 'no_items_widget.dart';
 
@@ -15,7 +13,7 @@ Widget bodyWidgetAnswersStats(StatsLoaded statsLoadedState) {
                   itemBuilder: (_, index) {
                     return Container(
                       decoration: BoxDecoration(
-                          color: Color.fromARGB(255, 84, 158, 158),
+                          color: const Color.fromARGB(255, 84, 158, 158),
                           borderRadius: BorderRadius.circular(8),
                           boxShadow: [
                             BoxShadow(
@@ -24,8 +22,8 @@ Widget bodyWidgetAnswersStats(StatsLoaded statsLoadedState) {
                                 spreadRadius: 2,
                                 offset: const Offset(0, 1.5))
                           ]),
-                      padding: EdgeInsets.all(10),
-                      margin: EdgeInsets.all(6),
+                      padding: const EdgeInsets.all(10),
+                      margin: const EdgeInsets.all(6),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.center,
                         mainAxisAlignment: MainAxisAlignment.center,

@@ -112,6 +112,7 @@ class _SignUpPageState extends State<SignUpPage> {
                 if (value!.isEmpty) {
                   return 'Enter Username';
                 }
+                return null;
               },
             ),
             const SizedBox(
@@ -164,6 +165,7 @@ class _SignUpPageState extends State<SignUpPage> {
                 } else if (_passwordController.text.length < 6) {
                   return 'Password is too short! Has to be more than 6 characters';
                 }
+                return null;
               },
             ),
             const SizedBox(

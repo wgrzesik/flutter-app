@@ -1,8 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/framework.dart';
-import 'package:flutter/src/widgets/placeholder.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-
 import '../../../app_const.dart';
 import '../../domain/entities/set_entity.dart';
 import '../cubit/auth/auth_cubit.dart';
@@ -37,7 +34,7 @@ class _StatisticsPageState extends State<StatisticsPage> {
               Navigator.pushNamed(context, PageConst.flahscardHomePage,
                   arguments: widget.uid);
             },
-            icon: Icon(Icons.arrow_back)),
+            icon: const Icon(Icons.arrow_back)),
         title: const Text(
           "My statistics",
           style: TextStyle(fontSize: 20, fontWeight: FontWeight.w600),
@@ -51,7 +48,7 @@ class _StatisticsPageState extends State<StatisticsPage> {
                   PageConst.signInPage,
                 );
               },
-              icon: Icon(Icons.exit_to_app)),
+              icon: const Icon(Icons.exit_to_app)),
         ],
       ),
       body: BlocBuilder<StatsCubit, StatsState>(
@@ -60,7 +57,7 @@ class _StatisticsPageState extends State<StatisticsPage> {
             return _bodyWidget(flashcardState);
           }
 
-          return Center(child: CircularProgressIndicator());
+          return const Center(child: CircularProgressIndicator());
         },
       ),
     );
@@ -74,7 +71,7 @@ class _StatisticsPageState extends State<StatisticsPage> {
               ? noItemsWidget('No statistics here yet')
               : GridView.builder(
                   itemCount: statsLoadedState.stats.length,
-                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                       crossAxisCount: 2, childAspectRatio: 1.2),
                   itemBuilder: (_, index) {
                     return Container(
@@ -88,8 +85,8 @@ class _StatisticsPageState extends State<StatisticsPage> {
                                 spreadRadius: 2,
                                 offset: const Offset(0, 1.5))
                           ]),
-                      padding: EdgeInsets.all(10),
-                      margin: EdgeInsets.all(6),
+                      padding: const EdgeInsets.all(10),
+                      margin: const EdgeInsets.all(6),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.center,
                         mainAxisAlignment: MainAxisAlignment.center,
@@ -98,7 +95,7 @@ class _StatisticsPageState extends State<StatisticsPage> {
                             child: Text(
                                 "${statsLoadedState.stats[index].term}: ${statsLoadedState.stats[index].amount}",
                                 overflow: TextOverflow.ellipsis,
-                                style: TextStyle(
+                                style: const TextStyle(
                                   fontSize: 16,
                                   fontWeight: FontWeight.bold,
                                 )),

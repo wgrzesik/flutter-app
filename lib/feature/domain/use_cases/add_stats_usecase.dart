@@ -1,5 +1,3 @@
-import 'package:note_app/feature/domain/entities/stats_entity.dart';
-
 import '../repositories/firebase_repository.dart';
 
 class AddStatsUseCase {

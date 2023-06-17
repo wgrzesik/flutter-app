@@ -1,8 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/framework.dart';
-import 'package:flutter/src/widgets/placeholder.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-
 import '../../../app_const.dart';
 import '../../domain/entities/multiple_page_arguments.dart';
 import '../../domain/entities/set_entity.dart';
@@ -44,14 +41,14 @@ class _NoAnswersPageState extends State<NoAnswersPage> {
             icon: const Icon(Icons.arrow_back),
           ),
           title: const Text(
-            "Your Statistics",
+            "Your not answered",
             style: TextStyle(fontSize: 20, fontWeight: FontWeight.w600),
           ),
         ),
         body: BlocBuilder<StatsCubit, StatsState>(
-          builder: (context, flashcardState) {
-            if (flashcardState is StatsLoaded) {
-              return bodyWidgetAnswersStats(flashcardState);
+          builder: (context, flashcardStateNo) {
+            if (flashcardStateNo is StatsLoaded) {
+              return bodyWidgetAnswersStats(flashcardStateNo);
             }
             return const Center(child: CircularProgressIndicator());
           },

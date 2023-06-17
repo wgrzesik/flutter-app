@@ -1,19 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/framework.dart';
-import 'package:flutter/src/widgets/placeholder.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:note_app/feature/domain/entities/stats_entity.dart';
-
 import '../../../app_const.dart';
 import '../../domain/entities/multiple_page_arguments.dart';
 import '../../domain/entities/set_entity.dart';
-import '../cubit/stats/stats_cubit.dart';
 
 class ButtonStatsPage extends StatefulWidget {
   final SetEntity setEntity;
   final String uid;
-  const ButtonStatsPage(
-      {super.key, required this.setEntity, required this.uid});
+  const ButtonStatsPage({Key? key, required this.setEntity, required this.uid})
+      : super(key: key);
 
   @override
   State<ButtonStatsPage> createState() => _ButtonStatsPageState();
@@ -22,8 +16,6 @@ class ButtonStatsPage extends StatefulWidget {
 class _ButtonStatsPageState extends State<ButtonStatsPage> {
   @override
   Widget build(BuildContext context) {
-    String? setName = widget.setEntity.name;
-    String? uid = widget.uid;
     return Scaffold(
       appBar: AppBar(
         automaticallyImplyLeading: false,
@@ -64,7 +56,7 @@ class _ButtonStatsPageState extends State<ButtonStatsPage> {
                   );
                 }),
           ),
-          SizedBox(
+          const SizedBox(
             height: 25,
           ),
           SizedBox(
@@ -86,7 +78,7 @@ class _ButtonStatsPageState extends State<ButtonStatsPage> {
                   );
                 }),
           ),
-          SizedBox(
+          const SizedBox(
             height: 25,
           ),
           SizedBox(
