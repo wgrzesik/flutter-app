@@ -84,12 +84,8 @@ class _SrsPageState extends State<SrsPage> with TickerProviderStateMixin {
                 flashcardStateSrs.flashcards;
             print(
                 'Length of flashcardState.flashcards in srsPage ${listOfStatsEntitySrs.length}');
-            if (listOfStatsEntitySrs.length < 1) {
-              Text('Nothing here!!');
-            } else {
-              return _bodyWidget(context, flashcardStateSrs.flashcards,
-                  cardController!, setName!, uid!);
-            }
+            return _bodyWidget(
+                context, listOfStatsEntitySrs, cardController!, setName!, uid!);
           }
           return const Center(child: CircularProgressIndicator());
         },
@@ -105,7 +101,6 @@ class _SrsPageState extends State<SrsPage> with TickerProviderStateMixin {
     String uid,
   ) {
     final List<Widget> flashcards = [];
-    //print(listOfStatsEntity.length);
     for (int index = 0; index < 10; index++) {
       final FlashcardEntity stat = listOfStatsEntity[index];
       final Widget flashcard = buildFlashcard(stat.term!, stat.def!, index);
@@ -131,11 +126,10 @@ class _SrsPageState extends State<SrsPage> with TickerProviderStateMixin {
             }
 
             if (index == 9) {
-              // go to the page that shows how many good and bad anwears and that you did good job!
-
+              // go to the end page that shows the amount of good and bad answers
               final arguments = MultiplePageArgumentsSetName(
                   setName, uid, badAnswers, goodAnswers);
-              var pushNamed = Navigator.pushNamed(
+              Navigator.pushNamed(
                 context,
                 PageConst.endOfFlashcardsPage,
                 arguments: arguments,

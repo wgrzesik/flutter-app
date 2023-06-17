@@ -52,11 +52,6 @@ class _WrongAnswersPageState extends State<WrongAnswersPage> {
       body: BlocBuilder<StatsCubit, StatsState>(
         builder: (context, flashcardStateWr) {
           if (flashcardStateWr is StatsLoaded) {
-            // if (flashcardState.stats.isEmpty) {
-            //   return bodyWidgetAnswersStats(flashcardState);
-            // } else {
-            //   return noItemsWidget('Nothing here');
-            // }
             return bodyWidgetAnswersStats(flashcardStateWr);
           }
           return const Center(child: CircularProgressIndicator());

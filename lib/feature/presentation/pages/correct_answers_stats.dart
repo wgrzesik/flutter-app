@@ -50,13 +50,7 @@ class _CorrectAnswersPageState extends State<CorrectAnswersPage> {
       body: BlocBuilder<StatsCubit, StatsState>(
         builder: (context, flashcardStateCr) {
           if (flashcardStateCr is StatsLoaded) {
-            // final List<StatsEntity> listOfStatsEntity = flashcardState.stats;
             return bodyWidgetAnswersStats(flashcardStateCr);
-            // if (flashcardState.stats.isEmpty) {
-            //   return bodyWidgetAnswersStats(flashcardState);
-            // } else {
-            //   return noItemsWidget('Nothing here');
-            // }
           }
           return const Center(child: CircularProgressIndicator());
         },
