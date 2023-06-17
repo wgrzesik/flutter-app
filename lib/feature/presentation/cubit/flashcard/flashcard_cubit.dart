@@ -32,15 +32,23 @@ class FlashcardCubit extends Cubit<FlashcardState> {
   Future<void> srs({required String uid, required String? setName}) async {
     emit(FlashcardLoading());
     try {
+      bool do_it = true;
       srsUseCase.call(uid, setName!).listen((notes) {
-        if (notes.length == 10) {
+        if (notes.length == 10 && do_it) {
+          for (FlashcardEntity n in notes) {
+            print('From cubit: ${n.term}');
+          }
           emit(FlashcardLoaded(flashcards: notes));
+          do_it = false;
         }
       });
       // final stream = srsUseCase.call(uid, setName!);
-      // stream.last.then((notes) {
+      // stream.first.then((notes) {
       //   //await for (final notes in stream) {
       //   print('Length of notes in flashcardCubit ${notes.length}');
+      //   for (FlashcardEntity n in notes) {
+      //     print('From cubit: ${n.term}');
+      //   }
       //   emit(FlashcardLoaded(flashcards: notes));
       // });
     } on SocketException catch (_) {

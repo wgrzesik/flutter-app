@@ -252,7 +252,7 @@ class FirebaseRemoteDataSourceImpl implements FirebaseRemoteDataSource {
 
   @override
   Stream<List<FlashcardEntity>> srs(String uid, String setName) {
-    final statsCollectionRef = firestore.collection("srs_1");
+    final statsCollectionRef = firestore.collection("srs_$setName");
     final listOfStatsEntity = <StatsEntity>[];
 
     final srsCollectionRef = firestore
@@ -285,143 +285,65 @@ class FirebaseRemoteDataSourceImpl implements FirebaseRemoteDataSource {
             statsEntity.amount == 0 && statsEntity.goodAnswer == 0));
       } else {
         // Take wrong answered flashcards
-        listOfStatsEntity.addAll(stats.where((statsEntity) =>
-            statsEntity.amount != 0 && statsEntity.goodAnswer == 0));
+        final filteredStats = stats
+            .where((statsEntity) =>
+                statsEntity.amount! > 0 && statsEntity.goodAnswer == 0)
+            .toList();
 
+        for (final statsEntity in filteredStats) {
+          if (!listOfStatsEntity
+              .any((entity) => entity.amount == statsEntity.amount)) {
+            listOfStatsEntity.add(statsEntity);
+          }
+
+          if (listOfStatsEntity.length >= 10) {
+            break; // Stop once we have 10 entities
+          }
+        }
         // Take flashcards that were not answered yet
         if (listOfStatsEntity.length < 10) {
           listOfStatsEntity.addAll(stats.where((statsEntity) =>
               statsEntity.amount == 0 && statsEntity.goodAnswer == 0));
         }
-      }
-      // Take missing amount from the flashcards with a good answer
-      if (listOfStatsEntity.length < 10) {
-        listOfStatsEntity
-            .addAll(stats.where((statsEntity) => statsEntity.goodAnswer != 0));
-      }
 
-      // Take additional flashcards if necessary
-      // if (listOfStatsEntity.length < 10) {
-      //   listOfStatsEntity.addAll(stats.take(listOfStatsEntity.length));
-      // }
+        if (listOfStatsEntity.length < 10) {
+          // Filter out entities with a goodAnswer and add them, starting from the lowest goodAnswer number
+          final missingStats = stats
+              .where((statsEntity) => statsEntity.goodAnswer != 0)
+              .toList();
+          missingStats.sort((a, b) => a.goodAnswer!.compareTo(b.goodAnswer!));
+
+          for (final statsEntity in missingStats) {
+            if (listOfStatsEntity.length >= 10) {
+              break; // Stop once we have 10 entities
+            }
+
+            listOfStatsEntity.add(statsEntity);
+          }
+        }
+      }
 
       // Remove extra items if the list is longer than 10
-
       if (listOfStatsEntity.length > 10) {
         listOfStatsEntity.removeRange(10, listOfStatsEntity.length);
       }
-
       print('Length of listOfStatsEntity in srs ${listOfStatsEntity.length}');
 
       for (StatsEntity stat in listOfStatsEntity) {
         print(stat.term);
         final statsId = statsCollectionRef.doc().id;
         final newStats = FlashcardModel(
-          nr: 2,
           term: stat.term,
           def: stat.def,
         ).toDocument();
         statsCollectionRef.doc(statsId).set(newStats);
       }
     });
+
     return statsCollectionRef.snapshots().map((querySnap) {
       return querySnap.docs
           .map((docSnap) => FlashcardModel.fromSnapshot(docSnap))
           .toList();
     });
   }
-
-  // return statsCollectionRef.snapshots().map((querySnap) {
-  //   return querySnap.docs
-  //       .map((docSnap) => FlashcardModel.fromSnapshot(docSnap))
-  //       .map((flashcardModel) {
-  //     return FlashcardEntity(
-  //       term: flashcardModel.term,
-  //       def: flashcardModel.def,
-  //     );
-  //   }).toList();
-  // });
-
-  //   @override
-  // Stream<List<StatsEntity>> srs(String uid, String setName) {
-  //   final srsStreamController = StreamController<List<StatsEntity>>();
-  //   List<StatsEntity> listOfStatsEntity = [];
-
-  //   final srsCollectionRef = firestore
-  //       .collection("users")
-  //       .doc(uid)
-  //       .collection("sets")
-  //       .doc(setName)
-  //       .collection("stats");
-
-  //   final srsStream = srsCollectionRef.snapshots().map((querySnap) {
-  //     return querySnap.docs
-  //         .map((docSnap) => StatsModel.fromSnapshot(docSnap))
-  //         .toList();
-  //   });
-
-  //   srsStream.listen((List<StatsEntity> stats) {
-  //     if (stats.isEmpty) {
-  //       srsStreamController.add(listOfStatsEntity);
-  //       return;
-  //     }
-
-  //     stats.sort((a, b) => b.amount!.compareTo(a.amount!));
-  //     final highestAmount = stats.first.amount!;
-  //     final flashcardsList = List<List<StatsEntity>>.filled(
-  //       highestAmount + 1,
-  //       [],
-  //       growable: false,
-  //     );
-
-  //     if (highestAmount == 0) {
-  //       for (int i = 0; i < 10; i++) {
-  //         listOfStatsEntity.add(stats[i]);
-  //       }
-  //     } else {
-  //       for (StatsEntity statsEntity in stats) {
-  //         flashcardsList[statsEntity.amount!].add(statsEntity);
-  //       }
-
-  //       int count = 0;
-  //       int currentAmount = 1;
-
-  //       while (count < 10 && count < stats.length) {
-  //         if (flashcardsList[currentAmount].isEmpty) {
-  //           currentAmount = (currentAmount % highestAmount) + 1;
-  //           continue;
-  //         }
-
-  //         StatsEntity flashcard = flashcardsList[currentAmount].removeAt(0);
-  //         listOfStatsEntity.add(flashcard);
-  //         count++;
-
-  //         currentAmount = (currentAmount % highestAmount) + 1;
-  //       }
-  //     }
-  //     srsStreamController.add(listOfStatsEntity);
-  //   });
-
-  //   return srsStreamController.stream;
-  // }
-
-  // @override
-  // List<Stream<int>> getAllStats(String uid, String setName) {
-  //   final wrongAnswersStream = getWrongAnswersStats(uid, setName);
-  //   final correctAnswersStream = getCorrectAnswersStats(uid, setName);
-  //   final noAnswersStream = getNoAnswersStats(uid, setName);
-
-  //   final wrongAnswersLengthStream =
-  //       wrongAnswersStream.map((list) => list.length);
-  //   final correctAnswersLengthStream =
-  //       correctAnswersStream.map((list) => list.length);
-  //   final noAnswersLengthStream = noAnswersStream.map((list) => list.length);
-
-  //   final list = [
-  //     wrongAnswersLengthStream,
-  //     correctAnswersLengthStream,
-  //     noAnswersLengthStream,
-  //   ];
-  //   return list;
-  // }
 }

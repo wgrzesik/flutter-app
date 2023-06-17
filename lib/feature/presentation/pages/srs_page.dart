@@ -30,8 +30,8 @@ class _SrsPageState extends State<SrsPage> with TickerProviderStateMixin {
   String? setName;
   String? uid;
   int current = 0;
-  int goodAnswears = 0;
-  int badAnswears = 0;
+  int goodAnswers = 0;
+  int badAnswers = 0;
 
   late Ticker _ticker;
 
@@ -39,19 +39,14 @@ class _SrsPageState extends State<SrsPage> with TickerProviderStateMixin {
   void initState() {
     super.initState();
     _ticker = createTicker((_) {});
-    // BlocProvider.of<StatsCubit>(context);
-    // BlocProvider.of<FlashcardCubit>(context)
-    //     .srs(uid: widget.uid, setName: widget.setEntity.name);
-    final statsCubit = BlocProvider.of<StatsCubit>(context);
     final flashcardCubit = BlocProvider.of<FlashcardCubit>(context);
-
     flashcardCubit.srs(uid: widget.uid, setName: widget.setEntity.name);
     cardController = SwipeableCardSectionController();
     setName = widget.setEntity.name!;
     uid = widget.uid;
     current = 0;
-    goodAnswears = 0;
-    badAnswears = 0;
+    goodAnswers = 0;
+    badAnswers = 0;
   }
 
   @override
@@ -72,6 +67,8 @@ class _SrsPageState extends State<SrsPage> with TickerProviderStateMixin {
               PageConst.flahscardHomePage,
               arguments: widget.uid,
             );
+            cardController?.enableSwipe(true);
+            cardController?.enableSwipeListener(false);
           },
           icon: const Icon(Icons.arrow_back),
         ),
@@ -81,8 +78,6 @@ class _SrsPageState extends State<SrsPage> with TickerProviderStateMixin {
         ),
       ),
       body: BlocBuilder<FlashcardCubit, FlashcardState>(
-        // buildWhen: (previous, current) => current is cubitSrs,
-        // bloc: cubitSrs,
         builder: (context, flashcardStateSrs) {
           if (flashcardStateSrs is FlashcardLoaded) {
             final List<FlashcardEntity> listOfStatsEntitySrs =
@@ -136,11 +131,10 @@ class _SrsPageState extends State<SrsPage> with TickerProviderStateMixin {
             }
 
             if (index == 9) {
-              // else {
               // go to the page that shows how many good and bad anwears and that you did good job!
 
               final arguments = MultiplePageArgumentsSetName(
-                  setName, uid, badAnswears, goodAnswears);
+                  setName, uid, badAnswers, goodAnswers);
               var pushNamed = Navigator.pushNamed(
                 context,
                 PageConst.endOfFlashcardsPage,
@@ -159,7 +153,7 @@ class _SrsPageState extends State<SrsPage> with TickerProviderStateMixin {
               );
               if (mounted) {
                 setState(() {
-                  badAnswears += 1;
+                  badAnswers += 1;
                 });
               }
             } else if (dir == Direction.right) {
@@ -171,7 +165,7 @@ class _SrsPageState extends State<SrsPage> with TickerProviderStateMixin {
                   listOfStatsEntity[current].def!);
               if (mounted) {
                 setState(() {
-                  goodAnswears += 1;
+                  goodAnswers += 1;
                 });
               }
             } else if (dir == Direction.up) {
