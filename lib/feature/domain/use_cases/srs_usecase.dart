@@ -1,3 +1,4 @@
+import '../entities/flashcard_entity.dart';
 import '../entities/stats_entity.dart';
 import '../repositories/firebase_repository.dart';
 
@@ -6,7 +7,7 @@ class SrsUseCase {
 
   SrsUseCase({required this.repository});
 
-  Stream<List<StatsEntity>> call(String uid, String setName) {
+  Stream<List<FlashcardEntity>> call(String uid, String setName) {
     return repository.srs(uid, setName);
   }
 }

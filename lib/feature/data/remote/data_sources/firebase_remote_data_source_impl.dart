@@ -251,11 +251,9 @@ class FirebaseRemoteDataSourceImpl implements FirebaseRemoteDataSource {
   }
 
   @override
-  Stream<List<StatsEntity>> srs(String uid, String setName) {
-    final srsStreamController = StreamController<List<StatsEntity>>();
-    final statsCollectionRef = firestore.collection("srs");
+  Stream<List<FlashcardEntity>> srs(String uid, String setName) {
+    final statsCollectionRef = firestore.collection("srs_1");
     final listOfStatsEntity = <StatsEntity>[];
-    //List<StatsEntity> listOfStatsEntity = [];
 
     final srsCollectionRef = firestore
         .collection("users")
@@ -271,11 +269,14 @@ class FirebaseRemoteDataSourceImpl implements FirebaseRemoteDataSource {
           .toList();
     });
 
-    srsStream.listen((List<StatsEntity> stats) {
-      if (stats.isEmpty) {
-        srsStreamController.add([]);
-        return;
+    statsCollectionRef.get().then((snapshot) {
+      for (final doc in snapshot.docs) {
+        doc.reference.delete();
       }
+    });
+
+    //srsStream.listen((List<StatsEntity> stats) {
+    srsStream.first.then((stats) {
       final highestAmount = stats[0].amount;
 
       if (highestAmount == 0) {
@@ -310,32 +311,37 @@ class FirebaseRemoteDataSourceImpl implements FirebaseRemoteDataSource {
         listOfStatsEntity.removeRange(10, listOfStatsEntity.length);
       }
 
-      //   });
-      // }
+      print('Length of listOfStatsEntity in srs ${listOfStatsEntity.length}');
 
-      //srsStreamController.add(listOfStatsEntity);
+      for (StatsEntity stat in listOfStatsEntity) {
+        print(stat.term);
+        final statsId = statsCollectionRef.doc().id;
+        final newStats = FlashcardModel(
+          nr: 2,
+          term: stat.term,
+          def: stat.def,
+        ).toDocument();
+        statsCollectionRef.doc(statsId).set(newStats);
+      }
     });
-
-    for (StatsEntity stat in listOfStatsEntity) {
-      final statsId = statsCollectionRef.doc().id;
-      final newStats = StatsModel(
-              uid: uid,
-              set: stat.set,
-              term: stat.term,
-              def: stat.def,
-              amount: stat.amount,
-              goodAnswer: stat.goodAnswer)
-          .toDocument();
-      statsCollectionRef.doc(statsId).set(newStats);
-    }
-
     return statsCollectionRef.snapshots().map((querySnap) {
       return querySnap.docs
-          .map((docSnap) => StatsModel.fromSnapshot(docSnap))
+          .map((docSnap) => FlashcardModel.fromSnapshot(docSnap))
           .toList();
     });
-    //return srsStreamController.stream;
   }
+
+  // return statsCollectionRef.snapshots().map((querySnap) {
+  //   return querySnap.docs
+  //       .map((docSnap) => FlashcardModel.fromSnapshot(docSnap))
+  //       .map((flashcardModel) {
+  //     return FlashcardEntity(
+  //       term: flashcardModel.term,
+  //       def: flashcardModel.def,
+  //     );
+  //   }).toList();
+  // });
+
   //   @override
   // Stream<List<StatsEntity>> srs(String uid, String setName) {
   //   final srsStreamController = StreamController<List<StatsEntity>>();

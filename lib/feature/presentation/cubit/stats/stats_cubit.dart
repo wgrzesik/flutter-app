@@ -18,7 +18,7 @@ class StatsCubit extends Cubit<StatsState> {
   final AddStatsUseCase addStatsUseCase;
   final UpdateStatsUseCase updateStatsUseCase;
   final GetStatsUseCase getStatsUseCase;
-  final SrsUseCase srsUseCase;
+  // final SrsUseCase srsUseCase;
   final GetWrongAnswersUseCase getWrongAnswersUseCase;
   final GetCorrectAnswersUseCase getCorrectAnswersUseCase;
   final GetNoAnswersUseCase getNoAnswersUseCase;
@@ -28,7 +28,7 @@ class StatsCubit extends Cubit<StatsState> {
     required this.addStatsUseCase,
     required this.updateStatsUseCase,
     required this.getStatsUseCase,
-    required this.srsUseCase,
+    // required this.srsUseCase,
     required this.getCorrectAnswersUseCase,
     required this.getWrongAnswersUseCase,
     required this.getNoAnswersUseCase,
@@ -68,20 +68,20 @@ class StatsCubit extends Cubit<StatsState> {
     }
   }
 
-  Future<void> srs({required String uid, required String? setName}) async {
-    emit(StatsLoading());
-    try {
-      // final notes = await srsUseCase.call(uid, setName!);
-      // emit(StatsLoaded(stats: notes));
-      srsUseCase.call(uid, setName!).listen((notes) {
-        emit(StatsLoaded(stats: notes));
-      });
-    } on SocketException catch (_) {
-      emit(StatsFailure());
-    } catch (_) {
-      emit(StatsFailure());
-    }
-  }
+  // Future<void> srs({required String uid, required String? setName}) async {
+  //   emit(StatsLoading());
+  //   try {
+  //     // final notes = await srsUseCase.call(uid, setName!);
+  //     // emit(StatsLoaded(stats: notes));
+  //     srsUseCase.call(uid, setName!).listen((notes) {
+  //       emit(StatsLoaded(stats: notes));
+  //     });
+  //   } on SocketException catch (_) {
+  //     emit(StatsFailure());
+  //   } catch (_) {
+  //     emit(StatsFailure());
+  //   }
+  // }
 
   Future<void> getWrongAnswers(
       {required String uid, required String? setName}) async {

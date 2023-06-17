@@ -41,13 +41,13 @@ Future<void> init() async {
         signUpUseCase: sl.call(),
       ));
   sl.registerFactory<SetCubit>(() => SetCubit(getSetsUseCase: sl.call()));
-  sl.registerFactory<FlashcardCubit>(
-      () => FlashcardCubit(getFlashcardsUseCase: sl.call()));
+  sl.registerFactory<FlashcardCubit>(() =>
+      FlashcardCubit(getFlashcardsUseCase: sl.call(), srsUseCase: sl.call()));
   sl.registerFactory<StatsCubit>(() => StatsCubit(
       addStatsUseCase: sl.call(),
       updateStatsUseCase: sl.call(),
       getStatsUseCase: sl.call(),
-      srsUseCase: sl.call(),
+      // srsUseCase: sl.call(),
       getCorrectAnswersUseCase: sl.call(),
       getNoAnswersUseCase: sl.call(),
       getWrongAnswersUseCase: sl.call(),

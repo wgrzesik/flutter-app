@@ -16,7 +16,7 @@ abstract class FirebaseRemoteDataSource {
   Future<void> initializeStats(String uid);
   Future<void> updateStats(StatsEntity stats);
   Stream<List<StatsEntity>> getStats(String uid, String setName);
-  Stream<List<StatsEntity>> srs(String uid, String setName);
+  Stream<List<FlashcardEntity>> srs(String uid, String setName);
   Stream<List<StatsEntity>> getNoAnswersStats(String uid, String setName);
   Stream<List<StatsEntity>> getCorrectAnswersStats(String uid, String setName);
   Stream<List<StatsEntity>> getWrongAnswersStats(String uid, String setName);

@@ -6,8 +6,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:note_app/feature/presentation/cubit/flashcard/flashcard_cubit.dart';
 import 'package:swipeable_card_stack/swipeable_card_stack.dart';
 import '../../../app_const.dart';
+import '../../domain/entities/flashcard_entity.dart';
 import '../../domain/entities/multiple_page_arguments.dart';
 import '../../domain/entities/set_entity.dart';
 import '../../domain/entities/stats_entity.dart';
@@ -35,16 +37,21 @@ class _SrsPageState extends State<SrsPage> with TickerProviderStateMixin {
 
   @override
   void initState() {
+    super.initState();
     _ticker = createTicker((_) {});
-    BlocProvider.of<StatsCubit>(context)
-        .srs(uid: widget.uid, setName: widget.setEntity.name);
+    // BlocProvider.of<StatsCubit>(context);
+    // BlocProvider.of<FlashcardCubit>(context)
+    //     .srs(uid: widget.uid, setName: widget.setEntity.name);
+    final statsCubit = BlocProvider.of<StatsCubit>(context);
+    final flashcardCubit = BlocProvider.of<FlashcardCubit>(context);
+
+    flashcardCubit.srs(uid: widget.uid, setName: widget.setEntity.name);
     cardController = SwipeableCardSectionController();
     setName = widget.setEntity.name!;
     uid = widget.uid;
     current = 0;
     goodAnswears = 0;
     badAnswears = 0;
-    super.initState();
   }
 
   @override
@@ -73,18 +80,19 @@ class _SrsPageState extends State<SrsPage> with TickerProviderStateMixin {
           style: const TextStyle(fontSize: 20, fontWeight: FontWeight.w600),
         ),
       ),
-      body: BlocBuilder<StatsCubit, StatsState>(
+      body: BlocBuilder<FlashcardCubit, FlashcardState>(
         // buildWhen: (previous, current) => current is cubitSrs,
         // bloc: cubitSrs,
         builder: (context, flashcardStateSrs) {
-          if (flashcardStateSrs is StatsLoaded) {
-            final List<StatsEntity> listOfStatsEntitySrs =
-                flashcardStateSrs.stats;
-            print(listOfStatsEntitySrs.length);
+          if (flashcardStateSrs is FlashcardLoaded) {
+            final List<FlashcardEntity> listOfStatsEntitySrs =
+                flashcardStateSrs.flashcards;
+            print(
+                'Length of flashcardState.flashcards in srsPage ${listOfStatsEntitySrs.length}');
             if (listOfStatsEntitySrs.length < 1) {
               Text('Nothing here!!');
             } else {
-              return _bodyWidget(context, flashcardStateSrs.stats,
+              return _bodyWidget(context, flashcardStateSrs.flashcards,
                   cardController!, setName!, uid!);
             }
           }
@@ -96,15 +104,15 @@ class _SrsPageState extends State<SrsPage> with TickerProviderStateMixin {
 
   Widget _bodyWidget(
     BuildContext context,
-    final List<StatsEntity> listOfStatsEntity,
+    final List<FlashcardEntity> listOfStatsEntity,
     SwipeableCardSectionController cardController,
     String setName,
     String uid,
   ) {
     final List<Widget> flashcards = [];
-    print(listOfStatsEntity.length);
-    for (int index = 0; index < min(listOfStatsEntity.length, 10); index++) {
-      final StatsEntity stat = listOfStatsEntity[index];
+    //print(listOfStatsEntity.length);
+    for (int index = 0; index < 10; index++) {
+      final FlashcardEntity stat = listOfStatsEntity[index];
       final Widget flashcard = buildFlashcard(stat.term!, stat.def!, index);
       flashcards.add(flashcard);
     }
