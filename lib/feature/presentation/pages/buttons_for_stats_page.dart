@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import '../../../app_const.dart';
 import '../../domain/entities/multiple_page_arguments.dart';
 import '../../domain/entities/set_entity.dart';
@@ -38,12 +39,20 @@ class _ButtonStatsPageState extends State<ButtonStatsPage> {
           child: Column(
         children: [
           SizedBox(
+            height: 100,
+          ),
+          FaIcon(FontAwesomeIcons.chartPie,
+              size: 150, color: Color.fromARGB(255, 131, 69, 141)),
+          SizedBox(
+            height: 100,
+          ),
+          SizedBox(
             height: 45,
             width: MediaQuery.of(context).size.width / 2,
             child: ElevatedButton(
                 style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.pink.withOpacity(.5)),
-                child: const Text('Correct ',
+                child: const Text('Masterd',
                     style:
                         TextStyle(fontSize: 17, fontWeight: FontWeight.w600)),
                 onPressed: () {
@@ -65,7 +74,7 @@ class _ButtonStatsPageState extends State<ButtonStatsPage> {
             child: ElevatedButton(
                 style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.purple.withOpacity(.5)),
-                child: const Text('Wrong ',
+                child: const Text('Still learing',
                     style:
                         TextStyle(fontSize: 17, fontWeight: FontWeight.w600)),
                 onPressed: () {
@@ -87,7 +96,7 @@ class _ButtonStatsPageState extends State<ButtonStatsPage> {
             child: ElevatedButton(
                 style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.indigo.withOpacity(.5)),
-                child: const Text('No',
+                child: const Text('Not studied',
                     style:
                         TextStyle(fontSize: 17, fontWeight: FontWeight.w600)),
                 onPressed: () {

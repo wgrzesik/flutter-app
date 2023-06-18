@@ -252,8 +252,9 @@ class FirebaseRemoteDataSourceImpl implements FirebaseRemoteDataSource {
 
   @override
   Stream<List<FlashcardEntity>> srs(String uid, String setName) {
-    final statsCollectionRef = firestore.collection("srs_$setName");
     final listOfStatsEntity = <StatsEntity>[];
+    final statsCollectionRef =
+        firestore.collection("users").doc(uid).collection("srs_$setName");
 
     final srsCollectionRef = firestore
         .collection("users")
