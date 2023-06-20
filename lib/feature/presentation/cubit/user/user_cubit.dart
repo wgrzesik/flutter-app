@@ -1,6 +1,6 @@
 import 'dart:io';
 
-import 'package:bloc/bloc.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:note_app/feature/domain/entities/user_entity.dart';
 import 'package:note_app/feature/domain/use_cases/get_create_current_user_usecase.dart';

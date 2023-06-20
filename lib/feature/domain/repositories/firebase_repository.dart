@@ -10,7 +10,7 @@ abstract class FirebaseRepository {
   Future<void> signUp(UserEntity user);
   Future<void> signOut();
   Future<void> getCreateCurrentUser(UserEntity user);
-  Future<void> initializeStats(String stats);
+  Future<void> initializeStats(String uid);
   Future<void> updateWrongAnswerStats(StatsEntity stats);
   Future<void> updateCorrectAnswerStats(StatsEntity statsEntity);
   Stream<List<SetEntity>> getSets();

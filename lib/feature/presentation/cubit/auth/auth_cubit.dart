@@ -1,5 +1,6 @@
 import 'dart:io';
-import 'package:bloc/bloc.dart';
+// import 'package:bloc/bloc.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:note_app/feature/domain/use_cases/get_current_uid_usecase.dart';
 import 'package:note_app/feature/domain/use_cases/is_sign_in_usecase.dart';

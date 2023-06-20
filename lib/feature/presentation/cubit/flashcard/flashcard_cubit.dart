@@ -1,6 +1,6 @@
 import 'dart:async';
 import 'dart:io';
-import 'package:bloc/bloc.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:note_app/feature/domain/use_cases/srs_usecase.dart';
 import '../../../domain/entities/flashcard_entity.dart';

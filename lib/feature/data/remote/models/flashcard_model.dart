@@ -2,7 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import '../../../domain/entities/flashcard_entity.dart';
 
 class FlashcardModel extends FlashcardEntity {
-  FlashcardModel({
+  const FlashcardModel({
     final String? term,
     final String? def,
   }) : super(term: term, def: def);
