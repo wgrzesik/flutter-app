@@ -5,7 +5,6 @@ import '../../domain/entities/multiple_page_arguments.dart';
 import '../../domain/entities/set_entity.dart';
 import '../cubit/stats/stats_cubit.dart';
 import '../widgets/body_answers_stats.dart';
-import '../widgets/no_items_widget.dart';
 
 class WrongAnswersPage extends StatefulWidget {
   final SetEntity setEntity;
@@ -23,8 +22,6 @@ class _WrongAnswersPageState extends State<WrongAnswersPage> {
     super.initState();
     BlocProvider.of<StatsCubit>(context)
         .getWrongAnswers(uid: widget.uid, setName: widget.setEntity.name);
-    // cubitWr = BlocProvider.of<StatsCubit>(context);
-    // cubitWr.getWrongAnswers(uid: widget.uid, setName: widget.setEntity.name);
   }
 
   @override

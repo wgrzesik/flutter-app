@@ -1,5 +1,4 @@
 import '../entities/flashcard_entity.dart';
-import '../entities/stats_entity.dart';
 import '../repositories/firebase_repository.dart';
 
 class SrsUseCase {

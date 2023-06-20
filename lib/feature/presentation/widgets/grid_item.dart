@@ -1,13 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:note_app/feature/presentation/widgets/popup_card.dart';
 import '../../domain/entities/set_entity.dart';
-import '../pages/hero_dialog_route.dart';
+import 'package:note_app/feature/presentation/routes/hero_dialog_route.dart';
 
 class GridItem extends StatelessWidget {
   final SetEntity setEntity;
   final String uidTodoCard;
   final int index;
   final String uid;
+  final IconData iconName;
 
   const GridItem({
     super.key,
@@ -15,6 +17,7 @@ class GridItem extends StatelessWidget {
     required this.uidTodoCard,
     required this.index,
     required this.uid,
+    required this.iconName,
   });
 
   @override
@@ -37,7 +40,7 @@ class GridItem extends StatelessWidget {
       child: Hero(
         tag: '${uidTodoCard}TD$index',
         child: Padding(
-          padding: const EdgeInsets.symmetric(vertical: 8.0),
+          padding: const EdgeInsets.symmetric(vertical: 0),
           child: Material(
             borderRadius: BorderRadius.circular(12),
             child: Padding(
@@ -59,11 +62,19 @@ class GridItem extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.center,
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
+                        FaIcon(
+                          iconName,
+                          size: 60,
+                          color: Colors.purple.withOpacity(0.3),
+                        ),
+                        const SizedBox(
+                          height: 20,
+                        ),
                         Center(
                           child: Text("${setEntity.name}",
                               overflow: TextOverflow.ellipsis,
                               style: const TextStyle(
-                                fontSize: 16,
+                                fontSize: 18,
                                 fontWeight: FontWeight.bold,
                               )),
                         ),

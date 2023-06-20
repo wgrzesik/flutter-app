@@ -5,7 +5,7 @@ class FlashcardEntity extends Equatable {
   final String? term;
   final String? def;
 
-  FlashcardEntity({this.nr, this.term, this.def});
+  const FlashcardEntity({this.nr, this.term, this.def});
 
   @override
   List<Object?> get props => [nr, term, def];

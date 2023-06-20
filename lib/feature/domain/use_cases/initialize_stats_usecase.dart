@@ -1,9 +1,9 @@
 import '../repositories/firebase_repository.dart';
 
-class AddStatsUseCase {
+class InitializeStatsUseCase {
   final FirebaseRepository repository;
 
-  AddStatsUseCase({required this.repository});
+  InitializeStatsUseCase({required this.repository});
 
   Future<void> call(String uid) async {
     return repository.initializeStats(uid);

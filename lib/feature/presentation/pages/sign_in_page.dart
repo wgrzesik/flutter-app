@@ -41,11 +41,11 @@ class _SignInPageState extends State<SignInPage> {
                 if (authState is Authenticated) {
                   return FlashcardHomePage(uid: authState.uid);
                 } else {
-                  return _bodyWidget();
+                  return bodyWidgetSignInPage();
                 }
               });
             }
-            return _bodyWidget();
+            return bodyWidgetSignInPage();
           },
           listener: (context, userState) {
             if (userState is UserSuccess) {
@@ -74,7 +74,7 @@ class _SignInPageState extends State<SignInPage> {
         ));
   }
 
-  _bodyWidget() {
+  bodyWidgetSignInPage() {
     return Form(
       key: _formField,
       child: Padding(

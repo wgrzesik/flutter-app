@@ -49,11 +49,11 @@ class _SignUpPageState extends State<SignUpPage> {
                   }
                   return FlashcardHomePage(uid: authState.uid);
                 } else {
-                  return _bodyWidget();
+                  return bodyWidgetSignUpPage();
                 }
               });
             }
-            return _bodyWidget();
+            return bodyWidgetSignUpPage();
           },
           listener: (context, userState) {
             if (userState is UserSuccess) {
@@ -83,7 +83,7 @@ class _SignUpPageState extends State<SignUpPage> {
         ));
   }
 
-  _bodyWidget() {
+  bodyWidgetSignUpPage() {
     return Form(
       key: _formField1,
       child: Container(

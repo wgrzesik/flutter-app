@@ -33,20 +33,12 @@ class FirebaseRepositoryImpl extends FirebaseRepository {
   Stream<List<SetEntity>> getSets() => remoteDataSource.getSets();
 
   @override
-  Stream<List<FlashcardEntity>> getFlashcards(String uid) =>
-      remoteDataSource.getFlashcards(uid);
-
-  @override
   Future<void> initializeStats(String uid) async =>
       remoteDataSource.initializeStats(uid);
 
   @override
   Future<void> updateWrongAnswerStats(StatsEntity stats) async =>
       remoteDataSource.updateWrongAnswerStats(stats);
-
-  @override
-  Stream<List<StatsEntity>> getStats(String uid, String setName) =>
-      remoteDataSource.getStats(uid, setName);
 
   @override
   Stream<List<FlashcardEntity>> srs(String uid, String setName) =>

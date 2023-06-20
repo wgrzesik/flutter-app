@@ -38,12 +38,12 @@ class _ButtonStatsPageState extends State<ButtonStatsPage> {
       body: Center(
           child: Column(
         children: [
-          SizedBox(
-            height: 100,
+          const SizedBox(
+            height: 130,
           ),
           FaIcon(FontAwesomeIcons.chartPie,
-              size: 150, color: Color.fromARGB(255, 131, 69, 141)),
-          SizedBox(
+              size: 100, color: Colors.purple.withOpacity(0.4)),
+          const SizedBox(
             height: 100,
           ),
           SizedBox(

@@ -5,7 +5,6 @@ import 'feature/domain/entities/multiple_page_arguments.dart';
 import 'feature/presentation/pages/buttons_for_stats_page.dart';
 import 'feature/presentation/pages/correct_answers_stats.dart';
 import 'feature/presentation/pages/end_of_flashcards_page.dart';
-import 'feature/presentation/pages/flashcards_page.dart';
 import 'feature/presentation/pages/no_answers_page.dart';
 import 'feature/presentation/pages/sign_in_page.dart';
 import 'feature/presentation/pages/sign_up_page.dart';
@@ -25,26 +24,6 @@ class OnGenerateRoute {
       case PageConst.signUpPage:
         {
           return materialBuilder(widget: const SignUpPage());
-        }
-      // case PageConst.flashcardsPage:
-      //   {
-      //     final arguments = settings.arguments as MultiplePageArguments;
-      //     return materialBuilder(
-      //       widget: FlashcardsPage(
-      //         setEntity: arguments.setEntity,
-      //         uid: arguments.uid,
-      //       ),
-      //     );
-      //   }
-      case PageConst.statisticsPage:
-        {
-          final arguments = settings.arguments as MultiplePageArguments;
-          return materialBuilder(
-            widget: ButtonStatsPage(
-              setEntity: arguments.setEntity,
-              uid: arguments.uid,
-            ),
-          );
         }
       case PageConst.flahscardHomePage:
         {

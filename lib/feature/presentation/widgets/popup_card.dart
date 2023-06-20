@@ -50,7 +50,7 @@ class PopupCard extends StatelessWidget {
                                       fontWeight: FontWeight.w600)),
                               onPressed: () {
                                 goToChoosenPage(
-                                    context, PageConst.statisticsPage);
+                                    context, PageConst.buttonStatsPage);
                               }),
                         ),
                         const SizedBox(height: 20),

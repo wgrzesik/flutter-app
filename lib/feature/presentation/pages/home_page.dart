@@ -4,7 +4,8 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:note_app/feature/presentation/cubit/auth/auth_cubit.dart';
 import '../../../app_const.dart';
 import '../cubit/set/set_cubit.dart';
-import 'package:note_app/feature/presentation/widgets/grid_item.dart';
+
+import '../widgets/body_home_page.dart';
 
 class FlashcardHomePage extends StatefulWidget {
   final String uid;
@@ -16,6 +17,12 @@ class FlashcardHomePage extends StatefulWidget {
 
 class _FlashcardHomePageState extends State<FlashcardHomePage> {
   bool isItFirstTime = true;
+  List<IconData> iconDataList = [
+    FontAwesomeIcons.peopleGroup,
+    FontAwesomeIcons.briefcase,
+    FontAwesomeIcons.volleyball,
+    FontAwesomeIcons.burger,
+  ];
   @override
   void initState() {
     BlocProvider.of<SetCubit>(context).getSet();
@@ -53,34 +60,11 @@ class _FlashcardHomePageState extends State<FlashcardHomePage> {
       body: BlocBuilder<SetCubit, SetState>(
         builder: (context, flashcardState) {
           if (flashcardState is SetLoaded) {
-            return _bodyWidget(flashcardState);
+            return bodyWidgetHomePage(flashcardState, iconDataList, widget);
           }
-
           return const Center(child: CircularProgressIndicator());
         },
       ),
-    );
-  }
-
-  Widget _bodyWidget(SetLoaded setLoadedState) {
-    return Column(
-      children: [
-        Expanded(
-          child: GridView.builder(
-            itemCount: setLoadedState.sets.length,
-            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: 2, childAspectRatio: 1.2),
-            itemBuilder: (_, index) {
-              final setEntity = setLoadedState.sets[index];
-              return GridItem(
-                  setEntity: setEntity,
-                  uidTodoCard: 'x',
-                  index: index,
-                  uid: widget.uid);
-            },
-          ),
-        ),
-      ],
     );
   }
 }

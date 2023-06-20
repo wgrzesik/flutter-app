@@ -19,24 +19,6 @@ class FirebaseRemoteDataSourceImpl implements FirebaseRemoteDataSource {
   FirebaseRemoteDataSourceImpl({required this.auth, required this.firestore});
 
   @override
-  Future<void> getCreateCurrentUser(UserEntity user) async {
-    final userCollectionRef = firestore.collection("user_data");
-    final uid = await getCurrentUid();
-    userCollectionRef.doc(user.uid).get().then((value) async {
-      final newUser = UserModel(
-        uid: uid,
-        email: user.email,
-        name: user.name,
-      ).toDocument();
-
-      if (!value.exists) {
-        userCollectionRef.doc(uid).set(newUser);
-      }
-      return;
-    });
-  }
-
-  @override
   Future<String> getCurrentUid() async => auth.currentUser!.uid;
 
   @override
@@ -55,24 +37,30 @@ class FirebaseRemoteDataSourceImpl implements FirebaseRemoteDataSource {
           email: user.email!, password: user.password!);
 
   @override
+  Future<void> getCreateCurrentUser(UserEntity user) async {
+    final userCollectionRef = firestore.collection("user_data");
+    final uid = await getCurrentUid();
+    userCollectionRef.doc(user.uid).get().then((value) async {
+      final newUser = UserModel(
+        uid: uid,
+        email: user.email,
+        name: user.name,
+      ).toDocument();
+
+      if (!value.exists) {
+        userCollectionRef.doc(uid).set(newUser);
+      }
+      return;
+    });
+  }
+
+  @override
   Stream<List<SetEntity>> getSets() {
     final setCollectionRef = firestore.collection("sets");
 
     return setCollectionRef.snapshots().map((querySnap) {
       return querySnap.docs
           .map((docSnap) => SetModel.fromSnapshot(docSnap))
-          .toList();
-    });
-  }
-
-  @override
-  Stream<List<FlashcardEntity>> getFlashcards(String uid) {
-    final flashcardCollectionRef =
-        firestore.collection("sets").doc(uid).collection("flashcards");
-
-    return flashcardCollectionRef.snapshots().map((querySnap) {
-      return querySnap.docs
-          .map((docSnap) => FlashcardModel.fromSnapshot(docSnap))
           .toList();
     });
   }
@@ -133,48 +121,39 @@ class FirebaseRemoteDataSourceImpl implements FirebaseRemoteDataSource {
         .doc(statsEntity.set)
         .collection("stats");
 
-    final statsId = statsCollectionRef.doc().id;
+    final querySnapshot = await statsCollectionRef
+        .where("term", isEqualTo: statsEntity.term)
+        .get();
+
+    final statsDoc = querySnapshot.docs.first;
+    final currentAmount = statsDoc.data()['badAnswer'] as int;
+    final updatedAmount = currentAmount + 1;
+
+    statsCollectionRef
+        .doc(statsDoc.id)
+        .update({'badAnswer': updatedAmount, 'goodAnswer': 0});
+  }
+
+  @override
+  Future<void> updateCorrectAnswerStats(StatsEntity statsEntity) async {
+    final statsCollectionRef = firestore
+        .collection("users")
+        .doc(statsEntity.uid)
+        .collection("sets")
+        .doc(statsEntity.set)
+        .collection("stats");
 
     final querySnapshot = await statsCollectionRef
         .where("term", isEqualTo: statsEntity.term)
         .get();
 
-    if (querySnapshot.docs.isEmpty) {
-      // Create new stats if it doesn't exist
-      final newStats = StatsModel(
-        uid: statsEntity.uid,
-        set: statsEntity.set,
-        term: statsEntity.term,
-        def: statsEntity.def,
-        badAnswer: 1,
-      ).toDocument();
-      statsCollectionRef.doc(statsId).set(newStats);
-    } else {
-      // Update stats by increasing nadAnswer by 1
-      final statsDoc = querySnapshot.docs.first;
-      final currentAmount = statsDoc.data()['badAnswer'] as int;
-      final updatedAmount = currentAmount + 1;
+    final statsDoc = querySnapshot.docs.first;
+    final currentGoodAnswer = statsDoc.data()['goodAnswer'] as int;
+    final updatedGoodAnswer = currentGoodAnswer + 1;
 
-      statsCollectionRef
-          .doc(statsDoc.id)
-          .update({'badAnswer': updatedAmount, 'goodAnswer': 0});
-    }
-  }
-
-  @override
-  Stream<List<StatsEntity>> getStats(String uid, String setName) {
-    final statsCollectionRef = firestore
-        .collection("users")
-        .doc(uid)
-        .collection("sets")
-        .doc(setName)
-        .collection("stats");
-
-    return statsCollectionRef.snapshots().map((querySnap) {
-      return querySnap.docs
-          .map((docSnap) => StatsModel.fromSnapshot(docSnap))
-          .toList();
-    });
+    statsCollectionRef
+        .doc(statsDoc.id)
+        .update({'goodAnswer': updatedGoodAnswer});
   }
 
   @override
@@ -226,28 +205,6 @@ class FirebaseRemoteDataSourceImpl implements FirebaseRemoteDataSource {
           .where((stats) => stats.badAnswer == 0 && stats.goodAnswer == 0)
           .toList();
     });
-  }
-
-  @override
-  Future<void> updateCorrectAnswerStats(StatsEntity statsEntity) async {
-    final statsCollectionRef = firestore
-        .collection("users")
-        .doc(statsEntity.uid)
-        .collection("sets")
-        .doc(statsEntity.set)
-        .collection("stats");
-
-    final querySnapshot = await statsCollectionRef
-        .where("term", isEqualTo: statsEntity.term)
-        .get();
-
-    final statsDoc = querySnapshot.docs.first;
-    final currentGoodAnswer = statsDoc.data()['goodAnswer'] as int;
-    final updatedGoodAnswer = currentGoodAnswer + 1;
-
-    statsCollectionRef
-        .doc(statsDoc.id)
-        .update({'goodAnswer': updatedGoodAnswer});
   }
 
   @override
@@ -331,25 +288,14 @@ class FirebaseRemoteDataSourceImpl implements FirebaseRemoteDataSource {
             }
             return listOfStatsEntity.length < 10;
           });
-
-          // for (final statsEntity in missingStats) {
-          //   if (listOfStatsEntity.length >= 10) {
-          //     break; // Stop once we have 10 entities
-          //   }
-
-          //   listOfStatsEntity.add(statsEntity);
-          // }
         }
       }
-
       // Remove extra items if the list is longer than 10
       if (listOfStatsEntity.length > 10) {
         listOfStatsEntity.removeRange(10, listOfStatsEntity.length);
       }
-      print('Length of listOfStatsEntity in srs ${listOfStatsEntity.length}');
 
       for (StatsEntity stat in listOfStatsEntity) {
-        print(stat.term);
         final statsId = statsCollectionRef.doc().id;
         final newStats = FlashcardModel(
           term: stat.term,

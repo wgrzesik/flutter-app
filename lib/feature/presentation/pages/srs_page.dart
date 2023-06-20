@@ -1,7 +1,3 @@
-import 'dart:async';
-import 'dart:math';
-
-import 'package:flip_card/flip_card.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -12,8 +8,9 @@ import '../../../app_const.dart';
 import '../../domain/entities/flashcard_entity.dart';
 import '../../domain/entities/multiple_page_arguments.dart';
 import '../../domain/entities/set_entity.dart';
-import '../../domain/entities/stats_entity.dart';
-import '../cubit/stats/stats_cubit.dart';
+import '../widgets/add_to_stats_correct_answers.dart';
+import '../widgets/build_flashcard.dart';
+import '../widgets/add_to_stats_wrong_answer.dart';
 
 class SrsPage extends StatefulWidget {
   final SetEntity setEntity;
@@ -82,8 +79,6 @@ class _SrsPageState extends State<SrsPage> with TickerProviderStateMixin {
           if (flashcardStateSrs is FlashcardLoaded) {
             final List<FlashcardEntity> listOfStatsEntitySrs =
                 flashcardStateSrs.flashcards;
-            print(
-                'Length of flashcardState.flashcards in srsPage ${listOfStatsEntitySrs.length}');
             return _bodyWidget(
                 context, listOfStatsEntitySrs, cardController!, setName!, uid!);
           }
@@ -199,92 +194,5 @@ class _SrsPageState extends State<SrsPage> with TickerProviderStateMixin {
         )
       ],
     );
-  }
-
-  Widget buildFlashcard(String term, String def, int index) {
-    final heroTag = 'flashcardHero_$index';
-    return Card(
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(8.0),
-      ),
-      child: Hero(
-        tag: heroTag,
-        child: FlipCard(
-          direction: FlipDirection.HORIZONTAL,
-          front: SizedBox(
-            child: Container(
-                decoration: const BoxDecoration(
-                  color: Color(0xFF006666),
-                  borderRadius: BorderRadius.all(Radius.circular(8.0)),
-                ),
-                child: contentOfFlipCard(term, index)),
-          ),
-          back: Container(
-              decoration: const BoxDecoration(
-                color: Color.fromARGB(255, 52, 153, 153),
-                borderRadius: BorderRadius.all(Radius.circular(8.0)),
-              ),
-              child: contentOfFlipCard(def, index)),
-        ),
-      ),
-    );
-  }
-
-  contentOfFlipCard(text, index) {
-    return Column(children: [
-      Expanded(
-        flex: 1,
-        child: Align(
-            alignment: Alignment.centerRight,
-            child: Padding(
-              padding: const EdgeInsets.only(right: 20),
-              child: Text('${index + 1}/10',
-                  style: const TextStyle(color: Colors.white)),
-            )),
-      ),
-      Expanded(
-        flex: 5,
-        child: Align(
-          alignment: Alignment.center,
-          child: Text(
-            text,
-            style: const TextStyle(
-              color: Colors.white,
-              fontWeight: FontWeight.bold,
-              fontSize: 24,
-            ),
-          ),
-        ),
-      ),
-      const Expanded(
-        flex: 1,
-        child: Align(
-            alignment: Alignment.center,
-            child:
-                Text('Click to flip', style: TextStyle(color: Colors.white))),
-      ),
-    ]);
-  }
-
-  void addToStatsWrongAnswer(
-    BuildContext context,
-    String setName,
-    String uid,
-    String term,
-    String def,
-  ) {
-    BlocProvider.of<StatsCubit>(context).updateStats(
-        stats: StatsEntity(set: setName, uid: uid, term: term, def: def));
-  }
-
-  void addToStatsCorrectAnswer(
-    BuildContext context,
-    String setName,
-    String uid,
-    String term,
-    String def,
-  ) {
-    BlocProvider.of<StatsCubit>(context).updateCorrectAnswer(
-        stats: StatsEntity(set: setName, uid: uid, term: term, def: def));
   }
 }

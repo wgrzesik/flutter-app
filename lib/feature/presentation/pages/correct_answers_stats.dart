@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:note_app/feature/presentation/widgets/no_items_widget.dart';
 import '../../../app_const.dart';
 import '../../domain/entities/multiple_page_arguments.dart';
 import '../../domain/entities/set_entity.dart';
