@@ -9,7 +9,7 @@
 - Tworzenie konta użytkownika 
 - Wykorzystanie Firebase (obsługa kont użytkowników oraz przechowywanie danych statystycznych)
 
-
+##
 
 ### Algorytm SRS
 
