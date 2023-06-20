@@ -41,8 +41,8 @@ class FirebaseRepositoryImpl extends FirebaseRepository {
       remoteDataSource.initializeStats(uid);
 
   @override
-  Future<void> updateStats(StatsEntity stats) async =>
-      remoteDataSource.updateStats(stats);
+  Future<void> updateWrongAnswerStats(StatsEntity stats) async =>
+      remoteDataSource.updateWrongAnswerStats(stats);
 
   @override
   Stream<List<StatsEntity>> getStats(String uid, String setName) =>

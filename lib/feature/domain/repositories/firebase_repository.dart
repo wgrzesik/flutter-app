@@ -14,7 +14,7 @@ abstract class FirebaseRepository {
   Stream<List<SetEntity>> getSets();
   Stream<List<FlashcardEntity>> getFlashcards(String uid);
   Future<void> initializeStats(String stats);
-  Future<void> updateStats(StatsEntity stats);
+  Future<void> updateWrongAnswerStats(StatsEntity stats);
   Stream<List<StatsEntity>> getStats(String uid, String setName);
   Stream<List<FlashcardEntity>> srs(String uid, String setName);
   Stream<List<StatsEntity>> getNoAnswersStats(String uid, String setName);

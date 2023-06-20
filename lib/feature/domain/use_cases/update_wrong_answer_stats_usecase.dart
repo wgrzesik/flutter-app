@@ -7,6 +7,6 @@ class UpdateStatsUseCase {
   UpdateStatsUseCase({required this.repository});
 
   Future<void> call(StatsEntity stats) async {
-    return repository.updateStats(stats);
+    return repository.updateWrongAnswerStats(stats);
   }
 }

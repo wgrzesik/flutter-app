@@ -8,9 +8,9 @@ import 'package:note_app/feature/domain/use_cases/get_no_answers_usecase.dart';
 import 'package:note_app/feature/domain/use_cases/get_stats_usecase.dart';
 import 'package:note_app/feature/domain/use_cases/get_wrong_answers_usecase.dart';
 import 'package:note_app/feature/domain/use_cases/srs_usecase.dart';
-import 'package:note_app/feature/domain/use_cases/update_correct_answer_usecase.dart';
+import 'package:note_app/feature/domain/use_cases/update_correct_answer_stats_usecase.dart';
 import '../../../domain/use_cases/add_stats_usecase.dart';
-import '../../../domain/use_cases/update_stats_usecase.dart';
+import '../../../domain/use_cases/update_wrong_answer_stats_usecase.dart';
 
 part 'stats_state.dart';
 

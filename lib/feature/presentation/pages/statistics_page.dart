@@ -93,7 +93,7 @@ class _StatisticsPageState extends State<StatisticsPage> {
                         children: [
                           Center(
                             child: Text(
-                                "${statsLoadedState.stats[index].term}: ${statsLoadedState.stats[index].amount}",
+                                "${statsLoadedState.stats[index].term}: ${statsLoadedState.stats[index].badAnswer}",
                                 overflow: TextOverflow.ellipsis,
                                 style: const TextStyle(
                                   fontSize: 16,

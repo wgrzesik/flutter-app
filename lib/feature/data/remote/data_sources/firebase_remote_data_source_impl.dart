@@ -114,7 +114,7 @@ class FirebaseRemoteDataSourceImpl implements FirebaseRemoteDataSource {
                     set: set.name,
                     term: flashcardEntity.term,
                     def: flashcardEntity.def,
-                    amount: 0,
+                    badAnswer: 0,
                     goodAnswer: 0)
                 .toDocument();
             statsCollectionRef.doc(statsId).set(newStats);
@@ -125,7 +125,7 @@ class FirebaseRemoteDataSourceImpl implements FirebaseRemoteDataSource {
   }
 
   @override
-  Future<void> updateStats(StatsEntity statsEntity) async {
+  Future<void> updateWrongAnswerStats(StatsEntity statsEntity) async {
     final statsCollectionRef = firestore
         .collection("users")
         .doc(statsEntity.uid)
@@ -146,18 +146,18 @@ class FirebaseRemoteDataSourceImpl implements FirebaseRemoteDataSource {
         set: statsEntity.set,
         term: statsEntity.term,
         def: statsEntity.def,
-        amount: 1,
+        badAnswer: 1,
       ).toDocument();
       statsCollectionRef.doc(statsId).set(newStats);
     } else {
-      // Update stats by increasing amount by 1
+      // Update stats by increasing nadAnswer by 1
       final statsDoc = querySnapshot.docs.first;
-      final currentAmount = statsDoc.data()['amount'] as int;
+      final currentAmount = statsDoc.data()['badAnswer'] as int;
       final updatedAmount = currentAmount + 1;
 
       statsCollectionRef
           .doc(statsDoc.id)
-          .update({'amount': updatedAmount, 'goodAnswer': 0});
+          .update({'badAnswer': updatedAmount, 'goodAnswer': 0});
     }
   }
 
@@ -189,7 +189,7 @@ class FirebaseRemoteDataSourceImpl implements FirebaseRemoteDataSource {
     return statsCollectionRef.snapshots().map((querySnap) {
       return querySnap.docs
           .map((docSnap) => StatsModel.fromSnapshot(docSnap))
-          .where((stats) => stats.amount != 0 && stats.goodAnswer == 0)
+          .where((stats) => stats.badAnswer != 0 && stats.goodAnswer == 0)
           .toList();
     });
   }
@@ -223,7 +223,7 @@ class FirebaseRemoteDataSourceImpl implements FirebaseRemoteDataSource {
     return statsCollectionRef.snapshots().map((querySnap) {
       return querySnap.docs
           .map((docSnap) => StatsModel.fromSnapshot(docSnap))
-          .where((stats) => stats.amount == 0 && stats.goodAnswer == 0)
+          .where((stats) => stats.badAnswer == 0 && stats.goodAnswer == 0)
           .toList();
     });
   }
@@ -262,7 +262,7 @@ class FirebaseRemoteDataSourceImpl implements FirebaseRemoteDataSource {
         .collection("sets")
         .doc(setName)
         .collection("stats")
-        .orderBy('amount', descending: true);
+        .orderBy('badAnswer', descending: true);
 
     final srsStream = srsCollectionRef.snapshots().map((querySnap) {
       return querySnap.docs
@@ -278,22 +278,26 @@ class FirebaseRemoteDataSourceImpl implements FirebaseRemoteDataSource {
 
     //srsStream.listen((List<StatsEntity> stats) {
     srsStream.first.then((stats) {
-      final highestAmount = stats[0].amount;
+      final highestAmount = stats[0].badAnswer;
 
       if (highestAmount == 0) {
-        // Take flashcards that were not answered yet
-        listOfStatsEntity.addAll(stats.where((statsEntity) =>
-            statsEntity.amount == 0 && statsEntity.goodAnswer == 0));
+        final notAnsweredFlashcards = stats
+            .where((statsEntity) =>
+                statsEntity.badAnswer == 0 && statsEntity.goodAnswer == 0)
+            .take(10) // Take only 10 flashcards
+            .toList();
+
+        listOfStatsEntity.addAll(notAnsweredFlashcards);
       } else {
         // Take wrong answered flashcards
         final filteredStats = stats
             .where((statsEntity) =>
-                statsEntity.amount! > 0 && statsEntity.goodAnswer == 0)
+                statsEntity.badAnswer! > 0 && statsEntity.goodAnswer == 0)
             .toList();
 
         for (final statsEntity in filteredStats) {
           if (!listOfStatsEntity
-              .any((entity) => entity.amount == statsEntity.amount)) {
+              .any((entity) => entity.badAnswer == statsEntity.badAnswer)) {
             listOfStatsEntity.add(statsEntity);
           }
 
@@ -303,8 +307,15 @@ class FirebaseRemoteDataSourceImpl implements FirebaseRemoteDataSource {
         }
         // Take flashcards that were not answered yet
         if (listOfStatsEntity.length < 10) {
-          listOfStatsEntity.addAll(stats.where((statsEntity) =>
-              statsEntity.amount == 0 && statsEntity.goodAnswer == 0));
+          final notAnsweredStats = stats
+              .where((statsEntity) =>
+                  statsEntity.badAnswer == 0 && statsEntity.goodAnswer == 0)
+              .take(10 -
+                  listOfStatsEntity
+                      .length) // Take only the remaining needed flashcards
+              .toList();
+
+          listOfStatsEntity.addAll(notAnsweredStats);
         }
 
         if (listOfStatsEntity.length < 10) {
@@ -314,13 +325,20 @@ class FirebaseRemoteDataSourceImpl implements FirebaseRemoteDataSource {
               .toList();
           missingStats.sort((a, b) => a.goodAnswer!.compareTo(b.goodAnswer!));
 
-          for (final statsEntity in missingStats) {
-            if (listOfStatsEntity.length >= 10) {
-              break; // Stop once we have 10 entities
+          missingStats.takeWhile((statsEntity) {
+            if (listOfStatsEntity.length < 10) {
+              listOfStatsEntity.add(statsEntity);
             }
+            return listOfStatsEntity.length < 10;
+          });
 
-            listOfStatsEntity.add(statsEntity);
-          }
+          // for (final statsEntity in missingStats) {
+          //   if (listOfStatsEntity.length >= 10) {
+          //     break; // Stop once we have 10 entities
+          //   }
+
+          //   listOfStatsEntity.add(statsEntity);
+          // }
         }
       }
 
