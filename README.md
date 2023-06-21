@@ -8,6 +8,7 @@
 - Statystyki postępów
 - Tworzenie konta użytkownika 
 - Wykorzystanie Firebase (obsługa kont użytkowników oraz przechowywanie danych statystycznych)
+- Swobodne przewijanie fiszek poprzez gesty przesuwania (swiping)
 
 ##
 
