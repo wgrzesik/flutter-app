@@ -88,6 +88,7 @@ class FirebaseRemoteDataSourceImpl implements FirebaseRemoteDataSource {
         });
 
         flashcardStream.listen((List<FlashcardEntity> flashcards) {
+          final batch = firestore.batch();
           for (FlashcardEntity flashcardEntity in flashcards) {
             final statsCollectionRef = firestore
                 .collection("users")
@@ -105,8 +106,9 @@ class FirebaseRemoteDataSourceImpl implements FirebaseRemoteDataSource {
                     badAnswer: 0,
                     goodAnswer: 0)
                 .toDocument();
-            statsCollectionRef.doc(statsId).set(newStats);
+            batch.set(statsCollectionRef.doc(statsId), newStats);
           }
+          batch.commit();
         });
       }
     });
@@ -168,7 +170,7 @@ class FirebaseRemoteDataSourceImpl implements FirebaseRemoteDataSource {
     return statsCollectionRef.snapshots().map((querySnap) {
       return querySnap.docs
           .map((docSnap) => StatsModel.fromSnapshot(docSnap))
-          .where((stats) => stats.badAnswer != 0 && stats.goodAnswer == 0)
+          .where((stats) => stats.badAnswer! > 0 && stats.goodAnswer == 0)
           .toList();
     });
   }
